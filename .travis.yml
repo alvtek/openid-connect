@@ -1,0 +1,50 @@
+sudo: false
+
+language: php
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - vendor
+
+env:
+  global:
+    - COMPOSER_ARGS="--no-interaction --ignore-platform-reqs --no-scripts"
+
+notifications:
+  email:
+    - alvin@alvinchevolleaux.com
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.0
+      env:
+        - DEPS=lowest
+    - php: 7.1
+      env:
+        - DEPS=lowest
+        - TEST_COVERAGE=TRUE
+    - php: 7.1
+      env:
+        - DEPS=latest
+  allow_failures:
+
+before_install:
+  - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
+  - travis_retry composer self-update
+
+install:
+  - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
+  - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi
+  - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0 ; fi
+  - travis_retry composer install $COMPOSER_ARGS
+  - composer show --installed
+
+script:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; fi
+  - if [[ $TEST_COVERAGE != 'true' ]]; then composer test ; fi
+  - if [[ $CHECK_CS == 'true' ]]; then composer cs-check ; fi
+
+after_script:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer upload-coverage ; fi
