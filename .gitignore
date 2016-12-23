@@ -1,0 +1,9 @@
+.idea
+composer.phar
+composer.lock
+nbproject
+coverage
+phpunit.xml
+vendor
+clover.xml
+coveralls-upload.json
