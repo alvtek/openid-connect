@@ -15,8 +15,8 @@ class UriTest extends TestCase
     {
         $uri = Uri::fromString('http://www.google.com/something');
         
-        $this->assertEquals('http', $uri->getScheme());
-        $this->assertEquals('www.google.com', $uri->getDomain());
+        $this->assertEquals('http:', (string) $uri->getScheme());
+        $this->assertEquals('www.google.com', (string) $uri->getHost());
         $this->assertEquals('/something', $uri->getPath());
     }
     
@@ -28,18 +28,18 @@ class UriTest extends TestCase
         $uri = Uri::fromString('https://www.alvinchevolleaux.com:8080/my/'
             . 'custom/path?foo=bar&baz=bop&a=b&c=d#fragz');
         
-        $this->assertEquals('https', $uri->getScheme());
-        $this->assertEquals('www.alvinchevolleaux.com', $uri->getDomain());
-        $this->assertEquals('8080', $uri->getPort());
+        $this->assertEquals('https:', (string) $uri->getScheme());
+        $this->assertEquals('www.alvinchevolleaux.com', (string) $uri->getHost());
+        $this->assertEquals(':8080', (string) $uri->getPort());
         $this->assertEquals('/my/custom/path', $uri->getPath());
-        $this->assertEquals('?foo=bar&baz=bop&a=b&c=d', $uri->getQueryString());
-        $this->assertEquals('fragz', $uri->getFragmentId());
+        $this->assertEquals('?foo=bar&baz=bop&a=b&c=d', (string) $uri->getQuery());
+        $this->assertEquals('#fragz', (string) $uri->getFragment());
     }
     
     public function testMalformedUri()
     {
         $this->expectException(\InvalidArgumentException::class);
         
-        $uri = Uri::fromString('malformeduri');
+        Uri::fromString('malformeduri');
     }
 }

@@ -43,7 +43,7 @@ class JWKS implements Iterator, Countable, JsonSerializable
         $keys = [];
 
         foreach ($data['keys'] as $keyData) {
-            $keys[] = JWKFactory::create($keyData);
+            $keys[] = JWKFactory::fromJWKData($keyData);
         }
 
         return new static($keys);

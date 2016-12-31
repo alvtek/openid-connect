@@ -4,10 +4,12 @@ namespace Alvtek\OpenIdConnect\Provider;
 
 use Assert\Assert;
 
+use JsonSerializable;
+
 /**
  * A value object modelling a boolean support option of a provider
  */
-class Flag
+class Flag implements JsonSerializable
 {
     /** @var string */
     private $type;
@@ -22,6 +24,11 @@ class Flag
         
         $this->type = $type;
         $this->value = $value;
+    }
+    
+    public function jsonSerialize()
+    {
+        return [$this->type => $this->value];
     }
     
     /**

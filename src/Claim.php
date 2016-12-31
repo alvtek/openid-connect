@@ -58,6 +58,6 @@ class Claim implements JsonSerializable
 
     public function equals(Claim $claim)
     {
-        return $this->type === $claim->type() && $this->value === $claim->value();
+        return $this->type === $claim->type && $this->value === $claim->value;
     }
 }

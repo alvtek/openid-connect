@@ -1,23 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect;
 
 use Alvtek\OpenIdConnect\Uri;
+use Alvtek\OpenIdConnect\Uri\Query;
+
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 
 use Assert\Assert;
 
 class RelyingParty
 {
-    /** @var string */
-    private $id;
+    /** 
+     * @var string 
+     */
+    private $clientId;
 
-    /** @var Uri */
+    /** 
+     * @var Uri 
+     */
     private $clientUri;
 
-    /** @var string */
-    private $tenantName;
-
-    /** @var string */
+    /** 
+     * @var string 
+     */
     private $secret;
 
     /**
@@ -30,48 +38,62 @@ class RelyingParty
      * @param string $tenantName
      * @param string $clientSecret
      */
-    public function __construct(Uri $clientUri, $clientId, $tenantName, $clientSecret)
+    private function __construct(Uri $clientUri, string $clientId, string $clientSecret)
     {
-        Assert::that($clientId)->scalar()->notEmpty();
-        Assert::that($tenantName)->string()->notEmpty();
-        Assert::that($clientSecret)->string()->notEmpty();
+        if (!strlen($clientId)) {
+            throw new InvalidArgumentException("clientId must be a non empty "
+                . "string.");
+        }
 
-        $this->id = $clientId;
+        $this->clientId = $clientId;
         $this->clientUri = $clientUri;
-        $this->tenantName = $tenantName;
         $this->secret = $clientSecret;
+    }
+    
+    public static function implicitClient(Uri $clientUri, string $clientId)
+    {
+        return new static($clientUri, $clientId, '');
+    }
+    
+    public static function codeFlowClient(Uri $clientUri, string $clientId, 
+        string $clientSecret)
+    {
+        return new static($clientUri, $clientId, $clientSecret);
     }
 
     /**
      * Get the login query string for this client
      *
-     * @param Uri $siteUri URL of the client website
+     * @param array $scopes The requested scopes
      * @param string $responseType Expected response type from an auth request
      * @param string $nonce nonce value to be passed to the OP
-     * @return string
+     * 
+     * @return Uri
      */
-    public function getLoginQuery(Uri $siteUri, $scopes, $responseType, $nonce)
+    public function getImplicitFlowAuthUri(Provider $provider, array $scopes, 
+        string $responseType, string $nonce) : Uri
     {
-        Assert::that($scopes)->isArray()->all()->string();
-        Assert::that($responseType)->notEmpty()->string();
-        Assert::that($nonce)->notEmpty()->string();
+        Assert::that($scopes)->all()->string();
         
-        $query = [
-            'client_id' => $this->id,
-            'redirect_uri' => (string) $siteUri,
+        $queryValues = [
+            'client_id' => $this->clientId,
+            'redirect_uri' => (string) $this->clientUri,
             'response_mode' => 'form_post',
             'response_type' => $responseType,
             'scope' => implode(' ', $scopes),
             'nonce' => $nonce,
-            'acr_values' => "tenant:{$this->tenantName}",
         ];
-
-        return http_build_query($query);
+        
+        $query = new Query($queryValues);
+        return $provider->buildAuthUri($query);
     }
 
-    public function getBasicAuthString()
+    /**
+     * @return string
+     */
+    public function getBasicAuthString() : string
     {
-        return "{$this->id}:{$this->secret}";
+        return "{$this->clientId}:{$this->secret}";
     }
 
     public function authorizationCodeParams($code, $redirectUri)
@@ -96,19 +118,25 @@ class RelyingParty
         ];
     }
     
-    /** @return string */
-    function id()
+    /** 
+     * @return string 
+     */
+    function clientId()
     {
-        return $this->id;
+        return $this->clientId;
     }
 
-    /** @return Uri */
+    /** 
+     * @return Uri 
+     */
     function uri()
     {
         return $this->url;
     }
 
-    /** @return string */
+    /** 
+     * @return string 
+     */
     function tenantName()
     {
         return $this->tenantName;

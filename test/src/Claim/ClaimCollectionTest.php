@@ -282,7 +282,7 @@ class ClaimCollectionTest extends TestCase
         $this->assertFalse($claims->hasClaimType('something'));
     }
     
-    public function testAddClaim()
+    public function testWithClaim()
     {
         $this->mockClaim1
             ->method('type')
@@ -292,7 +292,7 @@ class ClaimCollectionTest extends TestCase
         
         $this->assertEquals(0, count($claims));
         
-        $newClaims = $claims->addClaim($this->mockClaim1);
+        $newClaims = $claims->withClaim($this->mockClaim1);
     
         $this->assertEquals(1, count($newClaims));
     }

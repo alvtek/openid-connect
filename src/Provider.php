@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect;
 
 use Alvtek\OpenIdConnect\Uri;
+use Alvtek\OpenIdConnect\Uri\Query;
 
 use Alvtek\OpenIdConnect\Endpoint;
 use Alvtek\OpenIdConnect\Endpoint\EndpointCollection;
@@ -16,8 +19,6 @@ use Alvtek\OpenIdConnect\Provider\Flag\FlagCollection;
 use Alvtek\OpenIdConnect\Provider\Exception\InvalidProviderException;
 
 use Assert\Assert;
-
-use ReflectionClass;
 
 /**
  * This class contains the settings for an OpenId Provider.
@@ -51,21 +52,27 @@ class Provider
     const FRONTCHANNEL_LOGOUT_SUPPORTED = 'frontchannel_logout_supported';
     const FRONTCHANNEL_LOGOUT_SESSION_SUPPORTED = 'frontchannel_logout_session_supported';
     
-    /** @var array */
+    /** 
+     * @var array 
+     */
     private $requiredEndpoints = [
         self::ISSUER,
         self::AUTHORIZATION_ENDPOINT,
         self::JWKS_URI,
     ];
     
-    /** @var array */
+    /** 
+     * @var array 
+     */
     private $requiredOptions = [
         self::RESPONSE_TYPES_SUPPORTED,
         self::SUBJECT_TYPES_SUPPORTED,
         self::ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED,
     ];
     
-    /** @var array */
+    /** 
+     * @var array 
+     */
     private static $knownEndpoints = [
         Provider::ISSUER, Provider::AUTHORIZATION_ENDPOINT, 
         Provider::TOKEN_ENDPOINT, Provider::USERINFO_ENDPOINT,
@@ -74,7 +81,9 @@ class Provider
         Provider::REVOCATION_ENDPOINT, Provider::INTROSPECTION_ENDPOINT,
     ];
     
-    /** @var array */
+    /** 
+     * @var array 
+     */
     private static $knownOptions = [
         Provider::SCOPES_SUPPORTED, Provider::RESPONSE_TYPES_SUPPORTED,
         Provider::RESPONSE_MODES_SUPPORTED, Provider::GRANT_TYPES_SUPPORTED,
@@ -83,19 +92,27 @@ class Provider
         Provider::TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED,
     ];
     
-    /** @var array */
+    /** 
+     * @var array 
+     */
     private static $knownFlags = [
         Provider::FRONTCHANNEL_LOGOUT_SUPPORTED, 
         Provider::FRONTCHANNEL_LOGOUT_SESSION_SUPPORTED,
     ];
     
-    /** @var EndpointCollection */
+    /** 
+     * @var EndpointCollection 
+     */
     private $endpoints;
     
-    /** @var OptionCollection */
+    /** 
+     * @var OptionCollection 
+     */
     private $options;
 
-    /** @var FlagCollection */
+    /** 
+     * @var FlagCollection 
+     */
     private $flags;
     
     /**
@@ -124,76 +141,62 @@ class Provider
         $this->options = $options;
         $this->flags = $flags;
     }
-
-    /**
-     * @param array $data
-     * @return static
-     */
-    public static function fromArray($data)
+    
+    public static function fromArray(array $data)
     {
-        Assert::that($data)->isArray();
-        
         $endpoints = [];
         $options = [];
         $flags = [];
-        
+
         foreach (static::$knownEndpoints as $type) {
             if (isset($data[$type])) {
                 $endpoints[] = new Endpoint($type, Uri::fromString($data[$type]));
             }
         }
-        
+
         foreach (static::$knownOptions as $type) {
             if (isset($data[$type])) {
                 $options[] = new Option($type, $data[$type]);
             }
         }
-        
+
         foreach (static::$knownFlags as $type) {
             if (isset($data[$type])) {
                 $flags[] = new Flag($type, $data[$type]);
             }
         }
-        
-        return new static(new EndpointCollection($endpoints), 
+
+        return new static(new EndpointCollection($endpoints),
             new OptionCollection($options), new FlagCollection($flags));
     }
-
-    /**
-     * @return array
+    
+    /** 
+     * @return EndpointCollection 
      */
-    public function toArray()
-    {
-        $output = [];
-        
-        $reflectionClass = new ReflectionClass(self::class);
-
-        foreach ($reflectionClass->getProperties() as $property) {
-            $output[$property] = $this->{$property};
-        }
-        
-        return $output;
-    }
-
-    /** @return EndpointCollection */
     public function endpoints()
     {
         return $this->endpoints;
     }
     
-    /** @return OptionCollection */
+    /** 
+     * @return OptionCollection 
+     */
     public function options()
     {
         return $this->options;
     }
     
-    /** @return FlagCollection */
+    /** 
+     * @return FlagCollection 
+     */
     public function flags()
     {
         return $this->flags;
     }
 
-    /** @return boolean */
+    /** 
+     * @return bool
+     */
     public function issuerEquals(Uri $issuer)
     {
         return $this->endpoints
@@ -203,8 +206,9 @@ class Provider
     }
     
     /**
-     * @param string $alg
-     * @return boolean
+     * @param string $algorithm
+     * 
+     * @return bool
      */
     public function idTokenSigningAlgorithmSupported($algorithm)
     {
@@ -217,19 +221,19 @@ class Provider
 
     /**
      * 
-     * @param string $queryString
-     * @return string
+     * @param Query $query
+     * 
+     * @return Uri
      */
-    public function buildAuthUri($queryString)
+    public function buildAuthUri(Query $query) : Uri
     {
-        Assert::that($queryString)->notEmpty()->string();
-        
-        return (string) $this->endpoints->get(self::AUTHORIZATION_ENDPOINT) .
-            '?' . $queryString;
+        $endpoint = $this->endpoints->get(self::AUTHORIZATION_ENDPOINT)->uri();
+        return $endpoint->withQuery($query);
     }
 
     /**
      * @param string $queryString
+     * 
      * @return string
      */
     public function buildEndSessionUri($queryString)

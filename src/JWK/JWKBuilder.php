@@ -7,7 +7,8 @@ namespace Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWK\KeyType;
 use Alvtek\OpenIdConnect\JWK\Usage;
 use Alvtek\OpenIdConnect\JWK\KeyOperation\KeyOperationCollection as KeyOperations;
-use Alvtek\OpenIdConnect\JWA;
+use Alvtek\OpenIdConnect\JWAInterface;
+use Alvtek\OpenIdConnect\JWA\JWAFactory;
 
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Exception\RuntimeException;
@@ -121,7 +122,7 @@ abstract class JWKBuilder
         }
         
         if (array_key_exists('alg', $data)) {
-            $dataConverted['alg'] = JWA::createFromName($data);
+            $dataConverted['alg'] = JWAFactory::createFromName($data['alg']);
         }
         
         return static::fromArray(array_merge($data, $dataConverted));
@@ -139,7 +140,7 @@ abstract class JWKBuilder
         return $this;
     }
 
-    public function setAlg(JWA $alg) : self
+    public function setAlg(JWAInterface $alg) : self
     {
         $this->alg = $alg;
         return $this;

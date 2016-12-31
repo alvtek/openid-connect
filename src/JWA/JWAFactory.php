@@ -1,12 +1,12 @@
 <?php
 
-namespace Alvtek\OpenIdConnect;
+namespace Alvtek\OpenIdConnect\JWA;
 
 use Alvtek\OpenIdConnect\JWA\Exception\UnsupportedAlgorithmException;
 
 use Assert\Assert;
 
-abstract class JWA
+abstract class JWAFactory
 {
     const NONE = 'none'; // No digital signature or MAC
     const HS256 = 'HS256'; // HMAC using SHA-256
@@ -47,7 +47,7 @@ abstract class JWA
             return new None;
         }
 
-        $classname = __NAMESPACE__ . '\\JWA\\' . str_replace(' ', '', strtoupper($name));
+        $classname = __NAMESPACE__ . '\\' . str_replace(' ', '', strtoupper($name));
 
         Assert::that($classname)->classExists();
 

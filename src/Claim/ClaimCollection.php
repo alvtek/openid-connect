@@ -50,7 +50,7 @@ class ClaimCollection implements Iterator, Countable, JsonSerializable
      * @param array $data
      * @return static
      */
-    public static function fromApi($data) : self
+    public static function fromApi($data) : ClaimCollection
     {
         $claims = [];
         
@@ -71,7 +71,7 @@ class ClaimCollection implements Iterator, Countable, JsonSerializable
      * @param array $data
      * @return static
      */
-    public static function fromArray($data) : self
+    public static function fromArray($data) : ClaimCollection
     {
         Assert::that($data)->isArray();
 
@@ -176,9 +176,9 @@ class ClaimCollection implements Iterator, Countable, JsonSerializable
 
     /**
      * @param string $type
-     * @return self
+     * @return ClaimCollection
      */
-    public function getClaimsByType($type) : self
+    public function getClaimsByType($type) : ClaimCollection
     {
         $claims = [];
         
@@ -188,7 +188,7 @@ class ClaimCollection implements Iterator, Countable, JsonSerializable
             }
         }
 
-        return new self($claims);
+        return new static($claims);
     }
 
     /**
@@ -211,33 +211,29 @@ class ClaimCollection implements Iterator, Countable, JsonSerializable
 
     /**
      * @param Claim $claim
-     * @return self
+     * @return ClaimCollection
      */
-    public function addClaim(Claim $claim) : self
+    public function withClaim(Claim $claim) : ClaimCollection
     {
         $claims = $this->claims;
         $claims[] = $claim;
         
-        return new self($claims);
+        return new static($claims);
     }
 
     /**
      * @param \Alvtek\OpenIdConnect\Claim\Collection $claims
-     * @return self
+     * @return ClaimCollection
      */
-    public function merge(ClaimCollection $claims) : self
+    public function merge(ClaimCollection $claims) : ClaimCollection
     {
-        $mergedClaims = [];
-        
-        foreach ($claims as $claim) {
-            $mergedClaims[] = $claim;
-        }
+        $mergedClaims = $claims->claims;
         
         foreach ($this->claims as $claim) {
             $mergedClaims[] = $claim;
         }
         
-        return new self($mergedClaims);
+        return new static($mergedClaims);
     }
 
     /**
