@@ -1,7 +1,7 @@
 {
-  "name": "alvtek/openid-connect-client",
+  "name": "alvtek/openid-connect",
   "description": "A PHP OpenID Connect client library",
-  "homepage": "https://github.com/alvtek/openid-connect-client",
+  "homepage": "https://github.com/alvtek/openid-connect",
   "license": "BSD 3-Clause",
   "authors": [
     {
