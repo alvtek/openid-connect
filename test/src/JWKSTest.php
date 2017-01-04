@@ -2,13 +2,11 @@
 
 namespace Alvtek\OpenIdConnectTest;
 
-use PHPUnit\Framework\TestCase;
-
+use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWKS;
 use Alvtek\OpenIdConnect\JWS;
-use Alvtek\OpenIdConnect\JWK;
-
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use PHPUnit\Framework\TestCase;
 
 class JWKSTest extends TestCase
 {

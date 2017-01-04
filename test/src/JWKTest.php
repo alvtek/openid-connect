@@ -1,25 +1,17 @@
 <?php
-/**
- * @author Alvin Chevolleaux <alvin.chevolleaux@immediate.co.uk>
- * @copyright Copyright © 2016 Immediate Media Co.
- * @date 19/09/2016
- */
 
 namespace Alvtek\OpenIdConnectTest;
 
-use Alvtek\OpenIdConnect\JWK\JWKFactory;
+use Alvtek\OpenIdConnect\Exception\UnsupportedException;
 use Alvtek\OpenIdConnect\JWK;
-
-use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
-
-
+use Alvtek\OpenIdConnect\JWK\JWKFactory;
 use PHPUnit\Framework\TestCase;
 
 class JWKTest extends TestCase
 {
     public function testCreate()
     {
-        $jwk = JWKFactory::create([
+        $jwk = JWKFactory::fromJWKData([
             "kty"   => "RSA",
             "use"   => "sig",
             "kid"   => "1Q0M4pyXdxl58g8Xj82VUSV9Mic",
@@ -33,9 +25,9 @@ class JWKTest extends TestCase
 
     public function testECExceptionThrown()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(UnsupportedException::class);
 
-        JWKFactory::create([
+        JWKFactory::fromJWKData([
             "kty"   => "EC",
             "crv"   => "P-256",
             "x"     => "f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
@@ -46,9 +38,9 @@ class JWKTest extends TestCase
 
     public function testEmptyKtyExceptionThrown()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(UnsupportedException::class);
 
-        JWKFactory::create([
+        JWKFactory::fromJWKData([
             "kty"   => "",
             "crv"   => "P-256",
             "x"     => "f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
@@ -59,9 +51,9 @@ class JWKTest extends TestCase
 
     public function testOCTExceptionThrown()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(UnsupportedException::class);
 
-        JWKFactory::create([
+        JWKFactory::fromJWKData([
             "kty"   => "oct",
             "k"     => "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow",
             "kid"   => "testkid",

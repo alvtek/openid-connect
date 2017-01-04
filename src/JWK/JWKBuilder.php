@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\JWK;
 
-use Alvtek\OpenIdConnect\JWK\KeyType;
-use Alvtek\OpenIdConnect\JWK\Usage;
-use Alvtek\OpenIdConnect\JWK\KeyOperation\KeyOperationCollection as KeyOperations;
-use Alvtek\OpenIdConnect\JWAInterface;
-use Alvtek\OpenIdConnect\JWA\JWAFactory;
-
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Exception\RuntimeException;
+use Alvtek\OpenIdConnect\JWA\JWAFactory;
+use Alvtek\OpenIdConnect\JWAInterface;
+use Alvtek\OpenIdConnect\JWK;
+use Alvtek\OpenIdConnect\JWK\KeyOperation\KeyOperationCollection as KeyOperations;
 
 abstract class JWKBuilder
 {
@@ -68,7 +66,7 @@ abstract class JWKBuilder
         return $this->{$name};
     }
 
-    abstract public function build();
+    abstract public function build() : JWK;
 
     /**
      * This method creates a JWKBuilder object from an array. Note that if the

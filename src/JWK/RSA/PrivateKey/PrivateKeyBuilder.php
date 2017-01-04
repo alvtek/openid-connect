@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\JWK\RSA\PrivateKey;
 
+use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWK\RSA\PublicKey\PublicKeyBuilder;
 use Alvtek\OpenIdConnect\JWK\RSA\Prime;
 use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey;
@@ -171,7 +172,7 @@ class PrivateKeyBuilder extends PublicKeyBuilder
         return $builder;
     }
 
-    public function build()
+    public function build() : JWK
     {
         return new PrivateKey($this);
     }

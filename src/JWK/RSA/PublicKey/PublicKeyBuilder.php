@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
 
-use Alvtek\OpenIdConnect\JWK\JWKBuilder;
-use Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
 use Alvtek\OpenIdConnect\BigInteger;
+use Alvtek\OpenIdConnect\JWK;
+use Alvtek\OpenIdConnect\JWK\JWKBuilder;
 use Alvtek\OpenIdConnect\JWK\KeyType;
-use phpseclib\Crypt\RSA as phpseclibRSA;
-
+use Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
 use Assert\Assert;
+use phpseclib\Crypt\RSA as phpseclibRSA;
 
 class PublicKeyBuilder extends JWKBuilder
 {
@@ -96,7 +96,7 @@ class PublicKeyBuilder extends JWKBuilder
         return $builder;
     }
 
-    public function build() : PublicKey
+    public function build() : JWK
     {
         return new PublicKey($this);
     }

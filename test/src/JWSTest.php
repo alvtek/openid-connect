@@ -2,18 +2,15 @@
 
 namespace Alvtek\OpenIdConnectTest;
 
-use Alvtek\OpenIdConnect\JWS;
-use Alvtek\OpenIdConnect\JWS\Header;
+use Alvtek\OpenIdConnect\JWA\JWAFactory;
 use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey\PrivateKeyBuilder as RSAPrivateKeyBuilder;
-use Alvtek\OpenIdConnect\JWA;
+use Alvtek\OpenIdConnect\JWS;
+use Alvtek\OpenIdConnect\JWS\Exception\InvalidJWSException;
+use Alvtek\OpenIdConnect\JWS\Header;
 use Alvtek\OpenIdConnect\JWT;
-
 use Alvtek\OpenIdConnect\Provider;
 use Alvtek\OpenIdConnect\Provider\Option;
 use Alvtek\OpenIdConnect\Provider\Option\OptionCollection;
-
-use Alvtek\OpenIdConnect\JWS\Exception\InvalidJWSException;
-
 use PHPUnit\Framework\TestCase;
 
 class JWSTest extends TestCase
@@ -113,7 +110,7 @@ class JWSTest extends TestCase
         
         $header = new Header([
             'typ' => Header::TYPE_JWT,
-            'alg' => JWA::RS256,
+            'alg' => JWAFactory::RS256,
             'x5t' => 'test',
             'kid' => 'test',
         ]);

@@ -2,17 +2,13 @@
 
 namespace Alvtek\OpenIdConnect;
 
-use Alvtek\OpenIdConnect\JWK\VerificationInterface;
+use Alvtek\OpenIdConnect\JWA\JWAFactory;
 use Alvtek\OpenIdConnect\JWK\SigningInterface;
-use Alvtek\OpenIdConnect\JWS\Header;
-use Alvtek\OpenIdConnect\NonceVerificationInterface;
-use Alvtek\OpenIdConnect\Provider;
-
-use ParagonIE\ConstantTime\Base64UrlSafe;
-
+use Alvtek\OpenIdConnect\JWK\VerificationInterface;
 use Alvtek\OpenIdConnect\JWS\Exception\InvalidJWSException;
-
+use Alvtek\OpenIdConnect\JWS\Header;
 use Assert\Assert;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * This class represents a generic Json Web Signature. 
@@ -80,7 +76,7 @@ class JWS
         $headerEncoded = rtrim(Base64UrlSafe::encode($header->toJson()), '=');
         $payloadEncoded = rtrim(Base64UrlSafe::encode($payload), '=');
         
-        $jwa = JWA::createFromName($header->getParameter(Header::ALGORITHM));
+        $jwa = JWAFactory::createFromName($header->getParameter(Header::ALGORITHM));
 
         $signature = $key->sign($jwa, "$headerEncoded.$payloadEncoded");
         
@@ -120,7 +116,7 @@ class JWS
     public function verifySignature(VerificationInterface $key)
     {
         return $key->verify(
-            JWA::createFromName(
+            JWAFactory::createFromName(
                 $this->header->getParameter(Header::ALGORITHM)),
             $this->message(),
             $this->signature

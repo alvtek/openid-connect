@@ -3,13 +3,11 @@
 namespace Alvtek\OpenIdConnect;
 
 use Alvtek\OpenIdConnect\JWK\JWKBuilder;
+use Alvtek\OpenIdConnect\JWK\KeyOperation\KeyOperationCollection as KeyOperations;
 use Alvtek\OpenIdConnect\JWK\KeyType;
 use Alvtek\OpenIdConnect\JWK\Usage;
-use Alvtek\OpenIdConnect\JWK\KeyOperation\KeyOperationCollection as KeyOperations;
-use Alvtek\OpenIdConnect\JWA;
-
-use ReflectionClass;
 use JsonSerializable;
+use ReflectionClass;
 
 abstract class JWK implements JsonSerializable
 {
@@ -22,7 +20,7 @@ abstract class JWK implements JsonSerializable
     /** @var KeyOperations */
     protected $keyOps;
 
-    /** @var JWA */
+    /** @var JWAInterface */
     protected $alg;
 
     /** @var string */

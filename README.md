@@ -1,6 +1,6 @@
 # alvtek/openid-connect-client
 
-[![Build Status](https://travis-ci.org/alvtek/openid-connect-client.svg?branch=develop)](https://secure.travis-ci.org/alvtek/openid-connect-client)
+[![Build Status](https://travis-ci.org/alvtek/openid-connect.svg?branch=develop)](https://secure.travis-ci.org/alvtek/openid-connect)
 
 **A PHP OpenID Connect client library.**
 

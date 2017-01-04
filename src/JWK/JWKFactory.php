@@ -2,12 +2,11 @@
 
 namespace Alvtek\OpenIdConnect\JWK;
 
-use Alvtek\OpenIdConnect\JWK\RSA\PublicKey\PublicKeyBuilder;
-use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey\PrivateKeyBuilder;
-use Alvtek\OpenIdConnect\JWK\KeyType;
-
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Exception\RuntimeException;
+use Alvtek\OpenIdConnect\Exception\UnsupportedException;
+use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey\PrivateKeyBuilder;
+use Alvtek\OpenIdConnect\JWK\RSA\PublicKey\PublicKeyBuilder;
 
 class JWKFactory
 {
@@ -34,7 +33,7 @@ class JWKFactory
                 throw new RuntimeException("RSA key does not appear to be valid");
                 
             default:
-                throw new RuntimeException("Key type was not recognised or is "
+                throw new UnsupportedException("Key type was not recognised or is "
                     . "not currently supported");
         }
     }
