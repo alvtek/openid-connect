@@ -11,10 +11,7 @@
   ],
   "require": {
     "php": "^7",
-    "ext-openssl": "*",
-    "beberlei/assert": "^2.6.7",
-    "phpseclib/phpseclib": "2.0.4",
-    "paragonie/constant_time_encoding": "2.0.3"
+    "ext-openssl": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7"
