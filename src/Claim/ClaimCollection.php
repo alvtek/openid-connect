@@ -4,39 +4,42 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\Claim;
 
+use Alvtek\OpenIdConnect\ClaimInterface;
 use Alvtek\OpenIdConnect\Claim;
 
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Claim\Exception\UndefinedClaimException;
 use Alvtek\OpenIdConnect\Claim\Exception\AmbiguousClaimException;
+use Alvtek\OpenIdConnect\SerialisableInterface;
 
-use Assert\Assert;
 use Iterator;
 use Countable;
-use JsonSerializable;
 
 /**
  * Collection of claims with some helpful functionality and comparison functions
  */
-class ClaimCollection implements Iterator, Countable, JsonSerializable
+final class ClaimCollection implements Iterator, Countable, SerialisableInterface
 {
-    /** @var Claim[] */
+    /** @var ClaimInterface[] */
     private $claims;
 
     /** @var integer */
     private $position;
 
-    public function __construct($claims)
+    private function __construct(array $claims)
     {
-        // Ensure that the argument is an array of claims
-        Assert::that($claims)
-            ->isArray()
-            ->all()
-            ->isInstanceOf(Claim::class);
-        
         $this->position = 0;
         $this->claims = [];
         
         foreach ($claims as $claim) {
+            if (!$claim instanceof ClaimInterface) {
+                throw new InvalidArgumentException(sprintf(
+                    "expecting instance of %s got instance of %s", 
+                    ClaimInterface::class, 
+                    get_class($claim)
+                ));
+            }
+            
             if ($this->hasClaim($claim)) {
                 continue;
             }
@@ -46,32 +49,37 @@ class ClaimCollection implements Iterator, Countable, JsonSerializable
     }
 
     /**
-     * 
      * @param array $data
+     * 
      * @return static
      */
-    public static function fromApi($data) : ClaimCollection
+    public static function fromApiData(array $data) : ClaimCollection
     {
         $claims = [];
         
-        Assert::that($data)->isArray();
-
         foreach ($data as $claimData) {
-            Assert::that($claimData)
-                ->isArray()
-                ->choicesNotEmpty(['type', 'value']);
+            if (!array_key_exists('type', $claimData)) {
+                throw new InvalidArgumentException("expecting 'type' array key "
+                    . "for claim");
+            }
+            
+            if (!array_key_exists('value', $claimData)) {
+                throw new InvalidArgumentException("expecting 'value' array "
+                    . "key to be set");
+            }
             
             $claims[] = new Claim($claimData['type'], $claimData['value']);
         }
 
-        return new static($claims);
+        return static::fromArray($claims);
     }
 
     /**
      * @param array $data
+     * 
      * @return static
      */
-    public static function fromArray($data) : ClaimCollection
+    public static function fromArrayOfStrings(array $data) : ClaimCollection
     {
         Assert::that($data)->isArray();
 
@@ -96,7 +104,7 @@ class ClaimCollection implements Iterator, Countable, JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize() : array
+    public function serialise() : array
     {
         $output = [];
         

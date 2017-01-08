@@ -3,7 +3,7 @@
 namespace Alvtek\OpenIdConnectTest\Claim;
 
 use Alvtek\OpenIdConnect\Claim\ClaimCollection;
-use Alvtek\OpenIdConnect\Claim;
+use Alvtek\OpenIdConnect\ClaimInterface;
 
 use Alvtek\OpenIdConnect\Claim\Exception\UndefinedClaimException;
 use Alvtek\OpenIdConnect\Claim\Exception\AmbiguousClaimException;
@@ -28,15 +28,15 @@ class ClaimCollectionTest extends TestCase
     
     public function setup()
     {
-        $this->mockClaim1 = $this->getMockBuilder(Claim::class)
+        $this->mockClaim1 = $this->getMockBuilder(ClaimInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         
-        $this->mockClaim2 = $this->getMockBuilder(Claim::class)
+        $this->mockClaim2 = $this->getMockBuilder(ClaimInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         
-        $this->mockClaim3 = $this->getMockBuilder(Claim::class)
+        $this->mockClaim3 = $this->getMockBuilder(ClaimInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -324,7 +324,7 @@ class ClaimCollectionTest extends TestCase
     
     public function testEquality()
     {
-        $mockClaim1 = $this->getMockBuilder(Claim::class)
+        $mockClaim1 = $this->getMockBuilder(ClaimInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         
@@ -336,7 +336,7 @@ class ClaimCollectionTest extends TestCase
             ->method('value')
             ->willReturn('value1');
     
-        $mockClaim2 = $this->getMockBuilder(Claim::class)
+        $mockClaim2 = $this->getMockBuilder(ClaimInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         
@@ -348,7 +348,7 @@ class ClaimCollectionTest extends TestCase
             ->method('value')
             ->willReturn('value2');
         
-        $mockClaim1Duplicate = $this->getMockBuilder(Claim::class)
+        $mockClaim1Duplicate = $this->getMockBuilder(ClaimInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         
@@ -360,7 +360,7 @@ class ClaimCollectionTest extends TestCase
             ->method('value')
             ->willReturn('value1');
         
-        $mockClaim2Duplicate = $this->getMockBuilder(Claim::class)
+        $mockClaim2Duplicate = $this->getMockBuilder(ClaimInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         
@@ -378,7 +378,7 @@ class ClaimCollectionTest extends TestCase
         
         $this->assertTrue($claims->equals($claimsDuplicate));
         
-        $mockClaim3 = $this->getMockBuilder(Claim::class)
+        $mockClaim3 = $this->getMockBuilder(ClaimInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         

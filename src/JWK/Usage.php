@@ -11,20 +11,31 @@ class Usage
     const SIGNATURE = 'sig';
     const ENCRYPTION = 'enc';
     
-    /** @var string */
+    /** 
+     * @var string 
+     */
     private $value;
     
     /**
      * @param string $usage
      * @throws InvalidArgumentException
      */
-    public function __construct(string $usage)
+    private function __construct(string $usage)
     {
         if (!in_array($usage, [self::SIGNATURE, self::ENCRYPTION])) {
             throw new InvalidArgumentException("Unrecognised key use '$usage'");
         }
         
         $this->value = $usage;
+    }
+    
+    /**
+     * @param string $usage
+     * @return Usage
+     */
+    public static function fromString(string $usage) : Usage
+    {
+        return new static($usage);
     }
     
     public function __toString()
@@ -38,6 +49,6 @@ class Usage
      */
     public function equals(Usage $usage)
     {
-        return ((string) $usage === $this->value);
+        return ($usage->value === $this->value);
     }
 }

@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect;
 
 use Alvtek\OpenIdConnect\JWK\JWKBuilder;
 use Alvtek\OpenIdConnect\JWK\KeyOperation\KeyOperationCollection as KeyOperations;
 use Alvtek\OpenIdConnect\JWK\KeyType;
 use Alvtek\OpenIdConnect\JWK\Usage;
-use JsonSerializable;
+use Alvtek\OpenIdConnect\SerialisableInterface;
 use ReflectionClass;
 
-abstract class JWK implements JsonSerializable
+abstract class JWK implements SerialisableInterface
 {
     /** @var KeyType */
     protected $kty;
@@ -52,8 +54,8 @@ abstract class JWK implements JsonSerializable
             }
         }
     }
-
-    public function jsonSerialize()
+    
+    public function serialise() : array
     {
         $reflection = new ReflectionClass(self::class);
         
@@ -68,7 +70,7 @@ abstract class JWK implements JsonSerializable
         
         return $output;
     }
-
+    
     public function keyId()
     {
         return $this->kid;

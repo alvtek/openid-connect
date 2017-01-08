@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect;
 
-use Assert\Assert;
+use Alvtek\OpenIdConnect\ClaimInterface;
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
+use Alvtek\OpenIdConnect\SerialisableInterface;
 
-use JsonSerializable;
-
-class Claim implements JsonSerializable
+final class Claim implements ClaimInterface, SerialisableInterface
 {
     /** @var string */
     private $type;
@@ -16,16 +16,66 @@ class Claim implements JsonSerializable
     /** @var mixed */
     private $value;
     
-    public function __construct(string $type, $value)
+    private function __construct(string $type, $value)
     {
-        Assert::that($type)->notEmpty();
-        Assert::that($value)->scalar();
-
         $this->type = $type;
         $this->value = $value;
     }
+
+    /**
+     * @param string $type
+     * @param string $value
+     * @return Claim
+     */
+    public static function fromString(string $type, string $value) : Claim
+    {
+        return new static($type, $value);
+    }
+
+    /**
+     * @param string $type
+     * @param int $value
+     * @return Claim
+     */
+    public static function fromInt(string $type, int $value) : Claim
+    {
+        return new static($type, $value);
+    }
     
-    public function type()
+    /**
+     * @param string $type
+     * @param bool $value
+     * @return Claim
+     */
+    public static function fromBoolean(string $type, bool $value) : Claim
+    {
+        return new static($type, $value);
+    }
+    
+    /**
+     * @param array $data
+     * @return Claim
+     * @throws InvalidArgumentException
+     */
+    public static function fromArray(array $data) : Claim
+    {
+        if (!array_key_exists('type', $data)) {
+            throw new InvalidArgumentException("expected array key 'type' does "
+                . "not exist.");
+        }
+        
+        if (!array_key_exists('value', $data)) {
+            throw new InvalidArgumentException("expected array key 'value' "
+                . "does not exist.");
+        }
+        
+        return new static($data['type'], $data['value']);
+    }
+    
+    /**
+     * @return string
+     */
+    public function type() : string
     {
         return $this->type;
     }
@@ -35,29 +85,23 @@ class Claim implements JsonSerializable
         return $this->value;
     }
     
-    public function fromArray(array $data)
-    {
-        Assert::that($data)
-            ->choicesNotEmpty(['type', 'value']);
-        
-        return new static($data['type'], $data['value']);
-    }
-    
-    public function jsonSerialize()
-    {
-        return $this->toArray();
-    }
-    
-    public function toArray()
+    /**
+     * @return array
+     */
+    public function serialise() : array
     {
         return [
             'type' => $this->type,
             'value' => $this->value,
         ];
     }
-
-    public function equals(Claim $claim)
+    
+    /**
+     * @param ClaimInterface $claim
+     * @return bool
+     */
+    public function equals(ClaimInterface $claim) : bool
     {
-        return $this->type === $claim->type && $this->value === $claim->value;
+        return $this->type === $claim->type() && $this->value === $claim->value();
     }
 }

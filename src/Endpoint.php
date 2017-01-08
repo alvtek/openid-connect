@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect;
 
+use Alvtek\OpenIdConnect\EndpointInterface;
 use Alvtek\OpenIdConnect\Uri;
-
-use Assert\Assert;
 
 /**
  * Description of Endpoint
  */
-class Endpoint
+final class Endpoint implements EndpointInterface
 {
     /** @var string */
     private $type;
@@ -22,23 +23,19 @@ class Endpoint
      * @param Uri $uri
      * @throws UnrecognisedEndpointException
      */
-    public function __construct($type, Uri $uri)
+    public  function __construct(string $type, Uri $uri)
     {
-        Assert::that($type)
-            ->notEmpty()
-            ->string();
-
         $this->type = $type;
         $this->uri = $uri;
     }
-
+    
     public function __toString()
     {
         return (string) $this->uri;
     }
     
     /** @return string */
-    public function type()
+    public function type() : string
     {
         return $this->type;
     }
@@ -49,7 +46,7 @@ class Endpoint
         return $this->uri;
     }
     
-    public function equals(Endpoint $endpoint)
+    public function equals(EndpointInterface $endpoint) : bool
     {
         return (
             $this->type === $endpoint->type() &&

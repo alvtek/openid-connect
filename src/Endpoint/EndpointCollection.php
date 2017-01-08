@@ -5,36 +5,38 @@ declare(strict_types=1);
 namespace Alvtek\OpenIdConnect\Endpoint;
 
 use Alvtek\OpenIdConnect\Endpoint;
-
 use Alvtek\OpenIdConnect\Endpoint\Exception\UndefinedEndpointException;
+use Alvtek\OpenIdConnect\EndpointInterface;
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Provider\Exception\UnrecognisedEndpointException;
-
-use Assert\Assert;
-
 use Countable;
 use Iterator;
 
-class EndpointCollection implements Countable, Iterator
+final class EndpointCollection implements Countable, Iterator
 {
-    /** @var Endpoint[] */
+    /** 
+     * @var EndpointInterface[] 
+     */
     private $endpoints;
     
+    /**
+     * @var int
+     */
     private $position;
 
     /**
      * @param array $endpoints
      */
-    public function __construct($endpoints)
+    private function __construct(array $endpoints)
     {
-        Assert::that($endpoints)
-            ->isArray()
-            ->all()
-            ->isInstanceOf(Endpoint::class);
-        
         $this->position = 0;
         $this->endpoints = [];
         
         foreach ($endpoints as $endpoint) {
+            if (!$endpoint instanceof EndpointInterface) {
+                throw new InvalidArgumentException("Expecting array of Endpoints");
+            }
+            
             if ($this->hasEndpoint($endpoint)) {
                 continue;
             }
@@ -43,8 +45,13 @@ class EndpointCollection implements Countable, Iterator
         }
     }
     
+    public static function fromArray(array $endpoints) : EndpointCollection
+    {
+        return new static($endpoints);
+    }
+    
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEmpty()
     {
@@ -53,7 +60,7 @@ class EndpointCollection implements Countable, Iterator
     
     /**
      * @param string $type
-     * @return boolean
+     * @return bool
      */
     public function hasEndpointType($type)
     {
@@ -68,13 +75,15 @@ class EndpointCollection implements Countable, Iterator
     
     /**
      * @param array $types
-     * @return boolean
+     * @return bool
      */
-    public function hasEndpointTypes($types)
+    public function hasEndpointTypes(array $types)
     {
-        Assert::that($types)->isArray()->all()->string();
-
         foreach ($types as $type) {
+            if (!is_string($type)) {
+                throw new InvalidArgumentException("Expecting array of strings");
+            }
+            
             if (!$this->hasEndpointType($type)) {
                 return false;
             }
@@ -83,7 +92,11 @@ class EndpointCollection implements Countable, Iterator
         return true;
     }
     
-    public function hasEndpoint(Endpoint $endpoint)
+    /**
+     * @param EndpointInterface $endpoint
+     * @return bool
+     */
+    public function hasEndpoint(EndpointInterface $endpoint)
     {
         foreach ($this->endpoints as $existingEndpoint) {
             if ($existingEndpoint->equals($endpoint)) {
@@ -94,7 +107,11 @@ class EndpointCollection implements Countable, Iterator
         return false;
     }
     
-    public function addEndpoint(Endpoint $endpoint)
+    /**
+     * @param EndpointInterface $endpoint
+     * @return EndpointCollection
+     */
+    public function withEndpoint(EndpointInterface $endpoint)
     {
         $endpoints = $this->endpoints;
         $endpoints[] = $endpoint;
@@ -104,7 +121,7 @@ class EndpointCollection implements Countable, Iterator
 
     /**
      * @param string $type
-     * @return Endpoint
+     * @return EndpointInterface
      * @throws UnrecognisedEndpointException
      * @throws UndefinedEndpointException
      */
