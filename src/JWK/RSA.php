@@ -6,24 +6,17 @@ use Alvtek\OpenIdConnect\JWAInterface;
 use Alvtek\OpenIdConnect\JWK as BaseJWK;
 use Alvtek\OpenIdConnect\JWK\VerificationInterface;
 use Alvtek\OpenIdConnect\JWK\RSA\PublicKey\PublicKeyBuilder;
-use Alvtek\OpenIdConnect\BigInteger;
-use phpseclib\Crypt\RSA as phpseclibRSA;
-
-use Assert\Assert;
-
+use Alvtek\OpenIdConnect\BigIntegerInterface;
 use JsonSerializable;
 
 abstract class RSA extends BaseJWK implements VerificationInterface, JsonSerializable
 {
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $n;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $e;
     
-    /** @var phpseclibRSA */
-    protected $rsaToolkit;
-
     /**
      * @param PublicKeyBuilder $publicKeyBuilder
      */

@@ -50,7 +50,7 @@ class PrivateKeyBuilder extends PublicKeyBuilder
         'qi'    => 'iqmp',
     ];
 
-    public function __construct(array $data)
+    private function __construct(array $data)
     {
         Assert::that($data)
             ->choicesNotEmpty(static::$bigIntegerKeys);
@@ -77,20 +77,6 @@ class PrivateKeyBuilder extends PublicKeyBuilder
         $this->qi   = clone $data['qi'];
     }
     
-    /**
-     * Set other primes if more than two primes are used in this key
-     *
-     * @param Prime[] $otherPrimes
-     */
-    public function setOtherPrimes(array $otherPrimes)
-    {
-        Assert::that($otherPrimes)
-            ->all()
-            ->isInstanceOf(Prime::class);
-
-        $this->otherPrimes = $otherPrimes;
-    }
-
     /**
      * 
      * @param resource $privateKey
@@ -158,7 +144,7 @@ class PrivateKeyBuilder extends PublicKeyBuilder
             ->choicesNotEmpty($bigIntKeys);
         
         if (!isset($data['rsaToolkit'])) {
-            $data['rsaToolkit'] = new phpseclibRSA();
+            $data['rsaToolkit'] = new phpseclibRSA(); 
         }
         
         $builder =  new static($data);
@@ -170,6 +156,20 @@ class PrivateKeyBuilder extends PublicKeyBuilder
         }
         
         return $builder;
+    }
+    
+    /**
+     * Set other primes if more than two primes are used in this key
+     *
+     * @param Prime[] $otherPrimes
+     */
+    public function setOtherPrimes(array $otherPrimes)
+    {
+        Assert::that($otherPrimes)
+            ->all()
+            ->isInstanceOf(Prime::class);
+
+        $this->otherPrimes = $otherPrimes;
     }
 
     public function build() : JWK

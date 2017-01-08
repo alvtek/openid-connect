@@ -13,7 +13,7 @@ abstract class RSA implements JWAInterface
      */
     protected $alg;
     
-    public function sign($message, $key) : string
+    public function sign(string $message, string $key) : string
     {
         $signature = null;
 
@@ -27,7 +27,7 @@ abstract class RSA implements JWAInterface
         return $signature;
     }
 
-    public function verify($message, $signature, $key) : bool
+    public function verify(string $message, string $signature, string $key) : bool
     {
         return (bool) \openssl_verify(
             $message,

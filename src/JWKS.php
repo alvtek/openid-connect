@@ -1,38 +1,73 @@
 <?php
 
+namespace Alvtek\OpenIdConnect;
+
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
+use Alvtek\OpenIdConnect\Exception\RuntimeException;
 use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWK\JWKFactory;
 use Alvtek\OpenIdConnect\JWK\VerificationInterface;
 use Alvtek\OpenIdConnect\JWS;
+use Alvtek\OpenIdConnect\SerialisableInterface;
+use Countable;
+use Iterator;
 
-namespace Alvtek\OpenIdConnect;
-
-class JWKS implements Iterator, Countable, JsonSerializable
+class JWKS implements Iterator, Countable, SerialisableInterface
 {
-    /** @var JWK[] */
+    /** 
+     * @var JWK[] 
+     */
     private $keys;
     
-    /** @var integer */
+    /** 
+     * @var int 
+     */
     private $position;
 
-    public function __construct($keys)
+    /**
+     * @param JWK[] $keys
+     * @throws InvalidArgumentException
+     */
+    private function __construct(array $keys)
     {
-        Assert::that($keys)
-            ->isArray("Expecting array")
-            ->all()
-            ->isInstanceOf(JWK::class, "Expecting array of JWK objects");
-
         $this->position = 0;
-        foreach ($keys as $key) { /* @var $key JWK */
+        
+        foreach ($keys as $key) {
+            if (!$key instanceof JWK) {
+                throw new InvalidArgumentException("Expecting array of JWK "
+                    . "objects");
+            }
+            
             $this->keys[$key->keyId()] = $key;
         }
     }
     
-    public static function fromJWKSData($data)
+    /**
+     * @param array $keys
+     * @return JWK
+     */
+    public static function fromArray(array $keys)
     {
-        Assert::that($data)->isArray()->keyExists('keys');
-        Assert::that($data['keys'])->isArray();
-
+        return new static($keys);
+    }
+    
+    /**
+     * @param string $data
+     * @return JWK
+     */
+    public static function fromJson(string $data)
+    {
+        $data = \json_decode($data, true);
+        
+        if (!array_key_exists('keys', $data)) {
+            throw new InvalidArgumentException("Expecting key 'keys' in JWKS "
+                . "data.");
+        }
+        
+        if (!is_array($data['keys'])) {
+            throw new InvalidArgumentException("Expecting array of keys.");
+        }
+        
         $keys = [];
 
         foreach ($data['keys'] as $keyData) {
@@ -42,7 +77,7 @@ class JWKS implements Iterator, Countable, JsonSerializable
         return new static($keys);
     }
 
-    public function jsonSerialize()
+    public function serialise() : array
     {
         $keys = [];
         foreach ($this->keys as $key) {
