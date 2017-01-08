@@ -1,15 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Alvtek\OpenIdConnect;
-
+use Alvtek\OpenIdConnect\Provider;
 use Alvtek\OpenIdConnect\Uri;
 use Alvtek\OpenIdConnect\Uri\Query;
 
-use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
+declare(strict_types=1);
 
-use Assert\Assert;
+namespace Alvtek\OpenIdConnect;
 
 class RelyingParty
 {

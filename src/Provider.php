@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect;
 
-use Alvtek\OpenIdConnect\Uri;
-use Alvtek\OpenIdConnect\Uri\Query;
-
 use Alvtek\OpenIdConnect\Endpoint;
 use Alvtek\OpenIdConnect\Endpoint\EndpointCollection;
-
-use Alvtek\OpenIdConnect\Provider\Option;
-use Alvtek\OpenIdConnect\Provider\Option\OptionCollection;
-
+use Alvtek\OpenIdConnect\Provider\Exception\InvalidProviderException;
 use Alvtek\OpenIdConnect\Provider\Flag;
 use Alvtek\OpenIdConnect\Provider\Flag\FlagCollection;
-
-use Alvtek\OpenIdConnect\Provider\Exception\InvalidProviderException;
-
+use Alvtek\OpenIdConnect\Provider\Option;
+use Alvtek\OpenIdConnect\Provider\Option\OptionCollection;
+use Alvtek\OpenIdConnect\Uri;
+use Alvtek\OpenIdConnect\Uri\Query;
 use Assert\Assert;
 
 /**

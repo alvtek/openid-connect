@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect;
 
-use Alvtek\OpenIdConnect\Uri\Scheme;
-use Alvtek\OpenIdConnect\Uri\PortInterface;
-use Alvtek\OpenIdConnect\Uri\Port;
-use Alvtek\OpenIdConnect\Uri\NullPort;
-use Alvtek\OpenIdConnect\Uri\Domain;
-use Alvtek\OpenIdConnect\Uri\Query;
-use Alvtek\OpenIdConnect\Uri\Fragment;
-use Alvtek\OpenIdConnect\Uri\Path;
-
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
+use Alvtek\OpenIdConnect\Uri\Domain;
+use Alvtek\OpenIdConnect\Uri\Fragment;
+use Alvtek\OpenIdConnect\Uri\NullPort;
+use Alvtek\OpenIdConnect\Uri\Path;
+use Alvtek\OpenIdConnect\Uri\Port;
+use Alvtek\OpenIdConnect\Uri\PortInterface;
+use Alvtek\OpenIdConnect\Uri\Query;
+use Alvtek\OpenIdConnect\Uri\Scheme;
 
 /**
  * Immutable Uri value object
@@ -203,7 +202,7 @@ class Uri
     /**
      * @param Scheme $scheme
      * 
-     * @return \Alvtek\OpenIdConnect\Uri
+     * @return Uri
      */
     public function withScheme(Scheme $scheme) : Uri
     {
@@ -215,7 +214,7 @@ class Uri
      * @param string $user
      * @param mixed $password
      * 
-     * @return \Alvtek\OpenIdConnect\Uri
+     * @return Uri
      */
     public function withUserInfo(string $user, $password = null) : Uri
     {
@@ -226,7 +225,7 @@ class Uri
     /**
      * @param Domain $host
      * 
-     * @return \Alvtek\OpenIdConnect\Uri
+     * @return Uri
      */
     public function withHost(Domain $host) : Uri
     {
@@ -237,7 +236,7 @@ class Uri
     /**
      * @param PortInterface $port
      * 
-     * @return \Alvtek\OpenIdConnect\Uri
+     * @return Uri
      */
     public function withPort(PortInterface $port) : Uri
     {
@@ -248,7 +247,7 @@ class Uri
     /**
      * @param type $path
      * 
-     * @return \Alvtek\OpenIdConnect\Uri
+     * @return Uri
      */
     public function withPath(Path $path) : Uri
     {
@@ -259,7 +258,7 @@ class Uri
     /**
      * @param string $query
      * 
-     * @return \Alvtek\OpenIdConnect\Uri
+     * @return Uri
      */
     public function withQuery(Query $query) : Uri
     {
@@ -271,7 +270,7 @@ class Uri
     /**
      * @param string $fragment
      * 
-     * @return \Alvtek\OpenIdConnect\Uri
+     * @return Uri
      */
     public function withFragment(Fragment $fragment) : Uri
     {
@@ -292,7 +291,7 @@ class Uri
     }
 
     /**
-     * @param \Alvtek\OpenIdConnect\Uri $uri
+     * @param Uri $uri
      * 
      * @return bool
      */

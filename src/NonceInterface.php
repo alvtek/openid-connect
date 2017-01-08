@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect;
 
 /**
@@ -14,12 +16,12 @@ interface NonceVerificationInterface
     /**
      * This method may generate a nonce for verification later on.
      */
-    public function generate();
+    public function generate() : string;
     
     /** 
      * This method will verify a previously generated nonce is valid.
      * 
      * @return boolean 
      */
-    public function verify($nonce);
+    public function verify(string $nonce) : bool;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect;
 
 use Alvtek\OpenIdConnect\JWA\JWAFactory;
@@ -45,7 +47,12 @@ class JWS
         $this->message = $message;
     }
     
-    public static function fromSerialised($string)
+    /**
+     * @param string $string
+     * @return JWS
+     * @throws InvalidJWSException
+     */
+    public static function fromSerialisedString(string $string) : JWS
     {
         $segments = explode('.', $string);
 
@@ -69,7 +76,7 @@ class JWS
      * @param string $payload Can be any string but is usually a Json encoded JWT
      * @return static
      */
-    public static function createJWS(Header $header, SigningInterface $key, $payload)
+    public static function create(Header $header, SigningInterface $key, $payload)
     {
         Assert::that($payload)->notEmpty()->string();
         
