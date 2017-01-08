@@ -4,8 +4,8 @@ namespace Alvtek\OpenIdConnect\JWA;
 
 final class RS512 extends RSA
 {
-    protected function getAlg(): string
+    public function __construct()
     {
-        return 'SHA512';
+        $this->alg = 'SHA512';
     }
 }

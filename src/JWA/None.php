@@ -2,9 +2,8 @@
 
 namespace Alvtek\OpenIdConnect\JWA;
 
-use Alvtek\OpenIdConnect\JWAInterface;
-
 use Alvtek\OpenIdConnect\JWA\Exception\InvalidAlgorithmUseException;
+use Alvtek\OpenIdConnect\JWAInterface;
 
 class None implements JWAInterface
 {

@@ -6,7 +6,6 @@ namespace Alvtek\OpenIdConnect\Endpoint;
 
 use Alvtek\OpenIdConnect\Endpoint;
 use Alvtek\OpenIdConnect\Endpoint\Exception\UndefinedEndpointException;
-use Alvtek\OpenIdConnect\EndpointInterface;
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Provider\Exception\UnrecognisedEndpointException;
 use Countable;

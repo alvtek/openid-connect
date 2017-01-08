@@ -1,22 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect\JWA;
 
 use Alvtek\OpenIdConnect\JWAInterface;
 
 abstract class RSA implements JWAInterface
 {
-    abstract protected function getAlg() : string;
-
+    /**
+     * @var string
+     */
+    protected $alg;
+    
     public function sign($message, $key) : string
     {
         $signature = null;
 
-        openssl_sign(
+        \openssl_sign(
             $message,
             $signature,
             $key,
-            $this->getAlg()
+            $this->alg
         );
 
         return $signature;
@@ -24,11 +29,11 @@ abstract class RSA implements JWAInterface
 
     public function verify($message, $signature, $key) : bool
     {
-        return (bool) openssl_verify(
+        return (bool) \openssl_verify(
             $message,
             $signature,
             $key,
-            $this->getAlg()
+            $this->alg
         );
     }
 }

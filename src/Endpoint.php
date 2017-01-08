@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect;
 
-use Alvtek\OpenIdConnect\EndpointInterface;
 use Alvtek\OpenIdConnect\Uri;
 
 /**
  * Description of Endpoint
  */
-final class Endpoint implements EndpointInterface
+final class Endpoint
 {
     /** @var string */
     private $type;

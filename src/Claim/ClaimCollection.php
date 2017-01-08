@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\Claim;
 
-use Alvtek\OpenIdConnect\ClaimInterface;
 use Alvtek\OpenIdConnect\Claim;
 
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Claim\Exception\UndefinedClaimException;
 use Alvtek\OpenIdConnect\Claim\Exception\AmbiguousClaimException;
 use Alvtek\OpenIdConnect\SerialisableInterface;
-
 use Iterator;
 use Countable;
 
@@ -20,7 +18,7 @@ use Countable;
  */
 final class ClaimCollection implements Iterator, Countable, SerialisableInterface
 {
-    /** @var ClaimInterface[] */
+    /** @var Claim[] */
     private $claims;
 
     /** @var integer */
@@ -32,10 +30,10 @@ final class ClaimCollection implements Iterator, Countable, SerialisableInterfac
         $this->claims = [];
         
         foreach ($claims as $claim) {
-            if (!$claim instanceof ClaimInterface) {
+            if (!$claim instanceof Claim) {
                 throw new InvalidArgumentException(sprintf(
                     "expecting instance of %s got instance of %s", 
-                    ClaimInterface::class, 
+                    Claim::class, 
                     get_class($claim)
                 ));
             }
@@ -50,8 +48,7 @@ final class ClaimCollection implements Iterator, Countable, SerialisableInterfac
 
     /**
      * @param array $data
-     * 
-     * @return static
+     * @return ClaimCollection
      */
     public static function fromApiData(array $data) : ClaimCollection
     {
@@ -76,8 +73,7 @@ final class ClaimCollection implements Iterator, Countable, SerialisableInterfac
 
     /**
      * @param array $data
-     * 
-     * @return static
+     * @return ClaimCollection
      */
     public static function fromArrayOfStrings(array $data) : ClaimCollection
     {
@@ -109,7 +105,7 @@ final class ClaimCollection implements Iterator, Countable, SerialisableInterfac
         $output = [];
         
         foreach ($this->claims as $claim) {
-            $output[] = $claim->jsonSerialize();
+            $output[] = $claim->serialise();
         }
 
         return $output;

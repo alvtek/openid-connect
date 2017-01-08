@@ -4,8 +4,8 @@ namespace Alvtek\OpenIdConnect\JWA;
 
 final class RS256 extends RSA
 {
-    protected function getAlg() : string
+    public function __construct()
     {
-        return 'SHA256';
+        $this->alg = 'SHA256';
     }
 }

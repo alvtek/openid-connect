@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect;
 
-use Alvtek\OpenIdConnect\ClaimInterface;
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\SerialisableInterface;
 
-final class Claim implements ClaimInterface, SerialisableInterface
+final class Claim implements SerialisableInterface
 {
     /** @var string */
     private $type;

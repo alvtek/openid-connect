@@ -1,10 +1,14 @@
 <?php
 
-namespace Alvtek\OpenIdConnect\JWA;
+declare(strict_types=1);
 
+namespace Alvtek\OpenIdConnect;
+
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
+use Alvtek\OpenIdConnect\Exception\RuntimeException;
 use Alvtek\OpenIdConnect\JWA\Exception\UnsupportedAlgorithmException;
-
-use Assert\Assert;
+use Alvtek\OpenIdConnect\JWA\None;
+use Alvtek\OpenIdConnect\JWAInterface;
 
 abstract class JWAFactory
 {
@@ -31,12 +35,10 @@ abstract class JWAFactory
      * @param string $name
      * @return JWAInterface
      */
-    public static function createFromName($name)
+    public static function createFromName(string $name)
     {
-        Assert::that($name)->notEmpty()->string();
-        
-        if (!in_array($name, static::$supportedAlgorithms)) {
-            throw new UnsupportedAlgorithmException(sprintf("The algorithm "
+        if (!\in_array($name, static::$supportedAlgorithms)) {
+            throw new UnsupportedAlgorithmException(\sprintf("The algorithm "
                 . "'%s' is not supported by this library. If it is a valid "
                 . "Json Web Algorithm, please consider adding it to this "
                 . "library via a PR.", $name));
@@ -47,10 +49,21 @@ abstract class JWAFactory
             return new None;
         }
 
-        $classname = __NAMESPACE__ . '\\' . str_replace(' ', '', strtoupper($name));
+        $classname = __NAMESPACE__ . '\\JWA\\' . 
+            \str_replace(' ', '', \strtoupper($name));
 
-        Assert::that($classname)->classExists();
+        if (!\class_exists($classname)) {
+            throw new InvalidArgumentException(\sprintf("classname %s is not "
+                . "recognised.", $classname));
+        }
+        
+        $jwa = new $classname;
+        
+        if (!$jwa instanceof JWAInterface) {
+            throw new RuntimeException(\sprintf("%s does not implement "
+                . "required interface %s", $classname, JWAInterface::class));
+        }
 
-        return new $classname;
+        return $jwa;
     }
 }
