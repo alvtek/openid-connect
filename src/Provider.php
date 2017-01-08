@@ -13,7 +13,6 @@ use Alvtek\OpenIdConnect\Provider\Option;
 use Alvtek\OpenIdConnect\Provider\Option\OptionCollection;
 use Alvtek\OpenIdConnect\Uri;
 use Alvtek\OpenIdConnect\Uri\Query;
-use Assert\Assert;
 
 /**
  * This class contains the settings for an OpenId Provider.

@@ -3,13 +3,10 @@
 namespace Alvtek\OpenIdConnect;
 
 use Alvtek\OpenIdConnect\Claim\ClaimCollection;
-use Alvtek\OpenIdConnect\Provider;
-use Alvtek\OpenIdConnect\Uri;
-
 use Alvtek\OpenIdConnect\Claim\Exception\AmbiguousClaimException;
 use Alvtek\OpenIdConnect\JWS\Exception\UnexpectedPayloadException;
-
-use Assert\Assert;
+use Alvtek\OpenIdConnect\Provider;
+use Alvtek\OpenIdConnect\Uri;
 
 class JWT
 {

@@ -1,18 +1,11 @@
 <?php
 
-namespace Alvtek\OpenIdConnect;
-
 use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWK\JWKFactory;
 use Alvtek\OpenIdConnect\JWK\VerificationInterface;
+use Alvtek\OpenIdConnect\JWS;
 
-use Alvtek\OpenIdConnect\Exception\RuntimeException;
-
-use Assert\Assert;
-
-use Iterator;
-use Countable;
-use JsonSerializable;
+namespace Alvtek\OpenIdConnect;
 
 class JWKS implements Iterator, Countable, JsonSerializable
 {

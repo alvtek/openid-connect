@@ -9,8 +9,6 @@ use Alvtek\OpenIdConnect\JWK\SigningInterface;
 use Alvtek\OpenIdConnect\JWK\VerificationInterface;
 use Alvtek\OpenIdConnect\JWS\Exception\InvalidJWSException;
 use Alvtek\OpenIdConnect\JWS\Header;
-use Assert\Assert;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * This class represents a generic Json Web Signature. 
