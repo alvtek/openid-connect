@@ -26,6 +26,11 @@ final class PublicKey extends JWK implements VerificationInterface
     
     public function verify(JWAInterface $jwa, $message, $signature)
     {
+        // First hash the message using the JWA
+        $hashedMessage = $jwa->hash($message);
+        
+        // Pad the hash
+        
         
     }
 }

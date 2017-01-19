@@ -4,5 +4,5 @@ namespace Alvtek\OpenIdConnect;
 
 interface JWAInterface
 {
-    public function hash($message) : string;
+    public function hash($data) : string;
 }
