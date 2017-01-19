@@ -9,7 +9,7 @@ namespace Alvtek\OpenIdConnect;
  * between applications and will depend on what level of security
  * is required.
  */
-interface NonceVerificationInterface
+interface NonceInterface
 {
     /**
      * This method may generate a nonce for verification later on.
