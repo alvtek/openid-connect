@@ -2,10 +2,12 @@
 
 namespace Alvtek\OpenIdConnect\JWA;
 
-final class RS256 extends RSA
+use Alvtek\OpenIdConnect\JWAInterface;
+
+final class RS256 implements JWAInterface
 {
-    protected function getAlg() : string
+    public function hash($data): string
     {
-        return 'SHA256';
+        return hash('sha256', $data);
     }
 }

@@ -2,37 +2,37 @@
 
 namespace Alvtek\OpenIdConnect\JWK\RSA;
 
-use Alvtek\OpenIdConnect\JWK\RSA as RSAKey;
+use Alvtek\OpenIdConnect\JWAInterface;
+use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWK\RSA\Prime;
 use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey\PrivateKeyBuilder;
 use Alvtek\OpenIdConnect\JWK\SigningInterface;
-use Alvtek\OpenIdConnect\JWAInterface;
+use Alvtek\OpenIdConnect\Lib\BigIntegerInterface;
 
-use phpseclib\Crypt\RSA as phpseclibRSA;
-use phpseclib\Math\BigInteger;
-
-/**
- * PKCS1 representation of an RSA private key. This class borrows heavily from
- * an implementation by phpseclib. See license for more details.
- */
-final class PrivateKey extends RSAKey implements SigningInterface
+final class PrivateKey extends JWK implements SigningInterface
 {
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
+    private $n;
+
+    /** @var BigIntegerInterface */
+    private $e;
+    
+    /** @var BigIntegerInterface */
     private $d;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     private $p;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     private $q;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     private $dp;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     private $dq;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     private $qi;
 
     /** @var Prime[] */
@@ -44,38 +44,23 @@ final class PrivateKey extends RSAKey implements SigningInterface
 
         $this->otherPrimes = [];
 
-        $this->n    = clone $privateKeyBuilder->n;
-        $this->e    = clone $privateKeyBuilder->e;
-        $this->d    = clone $privateKeyBuilder->d;
-        $this->p    = clone $privateKeyBuilder->p;
-        $this->q    = clone $privateKeyBuilder->q;
-        $this->dp   = clone $privateKeyBuilder->dp;
-        $this->dq   = clone $privateKeyBuilder->dq;
-        $this->qi   = clone $privateKeyBuilder->qi;
+        $this->n    = $privateKeyBuilder->n;
+        $this->e    = $privateKeyBuilder->e;
+        $this->d    = $privateKeyBuilder->d;
+        $this->p    = $privateKeyBuilder->p;
+        $this->q    = $privateKeyBuilder->q;
+        $this->dp   = $privateKeyBuilder->dp;
+        $this->dq   = $privateKeyBuilder->dq;
+        $this->qi   = $privateKeyBuilder->qi;
 
         foreach ($privateKeyBuilder->otherPrimes as $prime) {
-            $this->otherPrimes[] = clone $prime;
+            $this->otherPrimes[] = $prime;
         }
     }
 
     public function sign(JWAInterface $jwa, $message) : string
     {
         return $jwa->sign($message, $this->toPem());
-    }
-
-    /**
-     * @return string
-     */
-    protected function toPem() : string
-    {
-        $this->rsaToolkit->modulus = $this->n;
-        $this->rsaToolkit->publicExponent = $this->e;
-        $this->rsaToolkit->exponent = $this->d;
-        $this->rsaToolkit->primes = $this->getPrimes();
-        $this->rsaToolkit->exponents = $this->getExponents();
-        $this->rsaToolkit->coefficients = $this->getCoefficients();
-        
-        return $this->rsaToolkit->getPrivateKey(phpseclibRSA::PUBLIC_FORMAT_PKCS1);
     }
 
     /**

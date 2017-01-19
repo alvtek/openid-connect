@@ -2,10 +2,12 @@
 
 namespace Alvtek\OpenIdConnect\JWA;
 
-final class RS512 extends RSA
+use Alvtek\OpenIdConnect\JWAInterface;
+
+final class RS512 implements JWAInterface
 {
-    protected function getAlg(): string
+    public function hash($data): string
     {
-        return 'SHA512';
+        return hash('sha512', $data);
     }
 }
