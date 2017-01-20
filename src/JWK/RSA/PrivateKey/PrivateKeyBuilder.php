@@ -4,35 +4,31 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\JWK\RSA\PrivateKey;
 
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\JWK;
-use Alvtek\OpenIdConnect\JWK\RSA\PublicKey\PublicKeyBuilder;
 use Alvtek\OpenIdConnect\JWK\RSA\Prime;
 use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey;
-use Alvtek\OpenIdConnect\BigInteger;
-use phpseclib\Crypt\RSA as phpseclibRSA;
+use Alvtek\OpenIdConnect\JWK\RSA\PublicKey\PublicKeyBuilder;
 
-use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
-
-use Assert\Assert;
 
 class PrivateKeyBuilder extends PublicKeyBuilder
 {
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $d;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $p;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $q;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $dp;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $dq;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $qi;
 
     /** @var Prime[] */

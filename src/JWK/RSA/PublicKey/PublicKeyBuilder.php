@@ -4,32 +4,26 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
 
-use Alvtek\OpenIdConnect\BigInteger;
 use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWK\JWKBuilder;
 use Alvtek\OpenIdConnect\JWK\KeyType;
 use Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
-use Assert\Assert;
-use phpseclib\Crypt\RSA as phpseclibRSA;
+use Alvtek\OpenIdConnect\Lib\BigIntegerInterface;
 
 class PublicKeyBuilder extends JWKBuilder
 {
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $n;
 
-    /** @var BigInteger */
+    /** @var BigIntegerInterface */
     protected $e;
     
-    /** @var phpseclibRSA */
-    protected $rsaToolkit;
-
-    public function __construct(phpseclibRSA $rsaToolkit, BigInteger $n, BigInteger $e)
+    public function __construct(BigInteger $n, BigInteger $e)
     {
         parent::__construct(new KeyType(KeyType::RSA));
 
         $this->n = clone $n;
         $this->e = clone $e;
-        $this->rsaToolkit = $rsaToolkit;
     }
 
     /**
@@ -81,11 +75,7 @@ class PublicKeyBuilder extends JWKBuilder
         Assert::that($data)
             ->choicesNotEmpty(['n', 'e']);
         
-        if (!isset($data['rsaToolkit'])) {
-            $data['rsaToolkit'] = new phpseclibRSA();
-        }
-        
-        $builder = new static($data['rsaToolkit'], $data['n'], $data['e']);
+        $builder = new static($data['n'], $data['e']);
         
         foreach (static::$arrayMappings as $key => $method) {
             if (array_key_exists($key, $data)) {
