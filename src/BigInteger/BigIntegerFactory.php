@@ -1,19 +1,14 @@
 <?php
 
+namespace Alvtek\OpenIdConnect\BigInteger;
 
-namespace Alvtek\OpenIdConnect\Lib;
+use Alvtek\OpenIdConnect\BigInteger\Adapter\BCMathAdapter;
+use Alvtek\OpenIdConnect\BigInteger\Adapter\GMPAdapter;
+use Alvtek\OpenIdConnect\BigInteger\Adapter\NativeAdapter;
+use Alvtek\OpenIdConnect\BigInteger;
 
-
-class BigInteger implements BigIntegerInterface
+class BigIntegerFactory
 {
-    /** @var string */
-    private $bytes;
-    
-    private function __construct(string $bytes)
-    {
-        $this->bytes = $bytes;
-    }
-    
     /**
      * @param string $encoded
      * @return BigIntegerInterface
@@ -50,11 +45,23 @@ class BigInteger implements BigIntegerInterface
         // TODO: Implement fromInteger() method.
     }
     
-    /**
-     * @return string
-     */
-    public function __toString()
+    private static function getAdapter()
     {
-        return $this->bytes;
+        // Use GNU Multiple Precision library if available
+        if (extension_loaded('gmp')) {
+            $adapter = new GMPAdapter;
+        }
+        
+        // Use BC Math if GNU MP is not available and the extension is loaded
+        if (!isset($adapter) && extension_loaded('bcmath')) {
+            $adapter = new BCMathAdapter;
+        }
+        
+        // If neither GNU MP or BC Math extensions are enabled we will use the native PHP adapter
+        if (!isset($adapter)) {
+            $adapter = new NativeAdapter;
+        }
+        
+        return $adapter;
     }
 }

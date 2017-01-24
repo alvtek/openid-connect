@@ -3,11 +3,19 @@
 namespace Alvtek\OpenIdConnect\JWA;
 
 use Alvtek\OpenIdConnect\JWAInterface;
+use Alvtek\OpenIdConnect\JWA\Exception\RuntimeException;
 
 final class RS256 implements JWAInterface
 {
-    public function hash($data): string
+    public function hash(string $data): string
     {
-        return hash('sha256', $data);
+        $hashed = hash('sha256', $data);
+        
+        if (empty($hashed)) {
+            throw new RuntimeException("JWA Algorithm returned an unexpected "
+                . "response.");
+        }
+        
+        return $hashed;
     }
 }
