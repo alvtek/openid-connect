@@ -2,7 +2,7 @@
 
 namespace Alvtek\OpenIdConnect;
 
-use Alvtek\OpenIdConnect\AdapterInterface;
+use Alvtek\OpenIdConnect\BigInteger\AdapterInterface;
 
 /*
  * This class handles integers that are potentially bigger than what the system
@@ -13,7 +13,7 @@ use Alvtek\OpenIdConnect\AdapterInterface;
  */
 class BigInteger implements BigIntegerInterface
 {
-    /** @var Adapter */
+    /** @var AdapterInterface */
     private $adapter;
     
     /** @var string */
@@ -48,26 +48,26 @@ class BigInteger implements BigIntegerInterface
 
     public function add(BigIntegerInterface $number): BigIntegerInterface
     {
-        
+        return $this->adapter->add($this, $number);
     }
 
     public function divide(BigIntegerInterface $divisor): BigIntegerInterface
     {
-        
+        return $this->adapter->divide($this, $divisor);
     }
 
     public function multiply(BigIntegerInterface $number): BigIntegerInterface
     {
-        
+        return $this->adapter->multiply($this, $number);
     }
 
     public function power(BigIntegerInterface $exponent): BigIntegerInterface
     {
-        
+        return $this->adapter->power($this, $exponent);
     }
 
     public function subtract(BigIntegerInterface $number): BigIntegerInterface
     {
-        
+        return $this->adapter->subtract($this, $number);
     }
 }

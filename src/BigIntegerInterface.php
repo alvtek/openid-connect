@@ -8,7 +8,7 @@ namespace Alvtek\OpenIdConnect;
  */
 interface BigIntegerInterface
 {
-    public function __toString();
+    public function toDecimal() : string;
     public function toBytes() : string;
     public function toHex() : string;
     public function add(BigIntegerInterface $number) : BigIntegerInterface;

@@ -31,7 +31,7 @@ class BigIntegerFactory
      * @param string $number
      * @return BigIntegerInterface
      */
-    public static function fromString(string $number) : BigIntegerInterface
+    public static function fromDecimal(string $number) : BigIntegerInterface
     {
         // TODO: Implement fromString() method.
     }
