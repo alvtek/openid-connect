@@ -13,16 +13,28 @@ class BCMathAdapter implements AdapterInterface
         $result = bcadd($a->toDecimal(), $b->toDecimal());
         return BigIntegerFactory::fromDecimal($result);
     }
+    
+    public function subtract(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
+    {
+        $result = bcsub($a->toDecimal(), $b->toDecimal());
+         return BigIntegerFactory::fromDecimal($result);
+    }
+    
+    public function multiply(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
+    {
+        $result = bcmul($a->toDecimal(), $b->toDecimal());
+        return BigIntegerFactory::fromDecimal($result);
+    }
 
     public function divide(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
         $result = bcadd($a->toDecimal(), $b->toDecimal());
         return BigIntegerFactory::fromDecimal($result);
     }
-
-    public function multiply(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
+    
+    public function modulus(BigIntegerInterface $a, BigIntegerInterface $b)
     {
-        $result = bcmul($a->toDecimal(), $b->toDecimal());
+        $result = bcmod($a->toDecimal(), $b->toDecimal());
         return BigIntegerFactory::fromDecimal($result);
     }
 
@@ -30,11 +42,5 @@ class BCMathAdapter implements AdapterInterface
     {
         $result = bcpow($a->toDecimal(), $b->toDecimal());
         return BigIntegerFactory::fromDecimal($result);
-    }
-
-    public function subtract(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
-    {
-        $result = bcsub($a->toDecimal(), $b->toDecimal());
-         return BigIntegerFactory::fromDecimal($result);
     }
 }

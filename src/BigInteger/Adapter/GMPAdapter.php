@@ -15,32 +15,44 @@ class GMPAdapter implements AdapterInterface
         $result = gmp_add($gmpA, $gmpB);
         return BigIntegerFactory::fromDecimal($result);
     }
+    
+    public function subtract(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
+    {
+        $gmpA = gmp_init($a->toHex(), 16);
+        $gmpB = gmp_init($b->toHex(), 16);
+        $result = gmp_sub($gmpA, $gmpB);
+        return BigIntegerFactory::fromDecimal($result);
+    }
+    
+    public function multiply(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
+    {
+        $gmpA = gmp_init($a->toHex(), 16);
+        $gmpB = gmp_init($b->toHex(), 16);
+        $result = gmp_mul($gmpA, $gmpB);
+        return BigIntegerFactory::fromDecimal($result);
+    }
 
     public function divide(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
         $gmpA = gmp_init($a->toHex(), 16);
         $gmpB = gmp_init($b->toHex(), 16);
-        $result = gmp_divide($gmpA, $gmpB);
+        $result = gmp_div_q($gmpA, $gmpB);
         return BigIntegerFactory::fromDecimal($result);
     }
-
-    public function multiply(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
+    
+    public function modulus(BigIntegerInterface $a, BigIntegerInterface $b)
     {
         $gmpA = gmp_init($a->toHex(), 16);
         $gmpB = gmp_init($b->toHex(), 16);
-        $result = gmp_($gmpA, $gmpB);
+        $result = gmp_mod($gmpA, $gmpB);
         return BigIntegerFactory::fromDecimal($result);
     }
 
     public function power(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
-        $result = bcpow($a->toDecimal(), $b->toDecimal());
+        $gmpA = gmp_init($a->toHex(), 16);
+        $gmpB = gmp_init($b->toHex(), 16);
+        $result = gmp_pow($gmpA, $gmpB);
         return BigIntegerFactory::fromDecimal($result);
-    }
-
-    public function subtract(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
-    {
-        $result = bcsub($a->toDecimal(), $b->toDecimal());
-         return BigIntegerFactory::fromDecimal($result);
     }
 }

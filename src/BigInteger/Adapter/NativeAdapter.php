@@ -3,31 +3,38 @@
 namespace Alvtek\OpenIdConnect\BigInteger\Adapter;
 
 use Alvtek\OpenIdConnect\BigInteger\AdapterInterface;
+use Alvtek\OpenIdConnect\BigIntegerInterface;
+use Alvtek\OpenIdConnect\BigInteger\BigIntegerFactory;
 
 class NativeAdapter implements AdapterInterface
 {
-    //put your code here
-    public function add(\Alvtek\OpenIdConnect\BigIntegerInterface $a, \Alvtek\OpenIdConnect\BigIntegerInterface $b): \Alvtek\OpenIdConnect\BigIntegerInterface
+    
+    public function add(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
         
     }
 
-    public function divide(\Alvtek\OpenIdConnect\BigIntegerInterface $a, \Alvtek\OpenIdConnect\BigIntegerInterface $b): \Alvtek\OpenIdConnect\BigIntegerInterface
+    public function divide(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
         
     }
 
-    public function multiply(\Alvtek\OpenIdConnect\BigIntegerInterface $a, \Alvtek\OpenIdConnect\BigIntegerInterface $b): \Alvtek\OpenIdConnect\BigIntegerInterface
+    public function modulus(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
         
     }
 
-    public function power(\Alvtek\OpenIdConnect\BigIntegerInterface $a, \Alvtek\OpenIdConnect\BigIntegerInterface $exponent): \Alvtek\OpenIdConnect\BigIntegerInterface
+    public function multiply(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
         
     }
 
-    public function subtract(\Alvtek\OpenIdConnect\BigIntegerInterface $a, \Alvtek\OpenIdConnect\BigIntegerInterface $b): \Alvtek\OpenIdConnect\BigIntegerInterface
+    public function power(BigIntegerInterface $a, BigIntegerInterface $exponent): BigIntegerInterface
+    {
+        
+    }
+
+    public function subtract(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
         
     }
