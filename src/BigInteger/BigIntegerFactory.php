@@ -24,7 +24,12 @@ class BigIntegerFactory
      */
     public static function fromHex(string $hex) : BigIntegerInterface
     {
-        // TODO: Implement fromHex() method.
+        if (preg_match('/[^A-Z0-9]/i')) {
+            // throw exception, only hex characters allowed
+        }
+        
+        $byteString = pack('H*', $hex);
+        return new BigInteger(static::getAdapter(), $byteString);
     }
     
     /**

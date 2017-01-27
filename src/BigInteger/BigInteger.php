@@ -19,29 +19,23 @@ class BigInteger implements BigIntegerInterface
     /** @var string */
     private $bytes;
     
-    /** @var array */
-    private $octets;
-    
-    private function __construct(AdapterInterface $adapter, string $bytes, int $base)
+    private function __construct(AdapterInterface $adapter, string $bytes)
     {
         $this->adapter = $adapter;
         $this->bytes = $bytes;
     }
     
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function toBytes(): string
     {
         return $this->bytes;
     }
-    
-    public function toBytes(): string
-    {
-        
-    }
 
     public function toHex(): string
+    {
+        return unpack('H*', $this->bytes);
+    }
+    
+    public function toDecimal(): string
     {
         
     }
