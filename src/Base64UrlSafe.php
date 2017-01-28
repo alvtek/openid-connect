@@ -4,13 +4,13 @@ namespace Alvtek\OpenIdConnect;
 
 class Base64UrlSafe implements Base64UrlSafeInterface
 {
-    public static function encode($data) : string
+    public static function encode(string $data) : string
     {
-        return json_encode($data);
+        return base64_encode($data);
     }
 
-    public static function decode(string $jsonData) : array
+    public static function decode(string $data) : string
     {
-        return json_decode($jsonData);
+        return base64_decode(strtr($data, '-_', '+/'));
     }
 }

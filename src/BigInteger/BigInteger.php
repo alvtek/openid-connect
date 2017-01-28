@@ -19,7 +19,7 @@ class BigInteger implements BigIntegerInterface
     /** @var string */
     private $bytes;
     
-    private function __construct(AdapterInterface $adapter, string $bytes)
+    public function __construct(AdapterInterface $adapter, string $bytes)
     {
         $this->adapter = $adapter;
         $this->bytes = $bytes;
@@ -42,7 +42,7 @@ class BigInteger implements BigIntegerInterface
     
     public function toInt() : int
     {
-        return $this->adapter->toInt();
+        return $this->adapter->toInt($this);
     }
 
     public function add(BigIntegerInterface $number): BigIntegerInterface
@@ -60,7 +60,7 @@ class BigInteger implements BigIntegerInterface
         return $this->adapter->multiply($this, $number);
     }
 
-    public function power(BigIntegerInterface $exponent): BigIntegerInterface
+    public function power(int $exponent): BigIntegerInterface
     {
         return $this->adapter->power($this, $exponent);
     }
@@ -68,5 +68,20 @@ class BigInteger implements BigIntegerInterface
     public function subtract(BigIntegerInterface $number): BigIntegerInterface
     {
         return $this->adapter->subtract($this, $number);
+    }
+
+    public function modulus(BigIntegerInterface $divisor): BigIntegerInterface
+    {
+        return $this->adapter->modulus($this, $divisor);
+    }
+    
+    public function compare(BigIntegerInterface $number) : int
+    {
+        return $this->adapter->compare($this, $number);
+    }
+
+    public function powerModulus(int $exponent, BigIntegerInterface $modulus): BigIntegerInterface
+    {
+        return $this->adapter->powerModulus($this, $exponent, $modulus);
     }
 }

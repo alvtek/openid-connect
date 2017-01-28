@@ -8,15 +8,9 @@ use Alvtek\OpenIdConnect\JWA\Exception\InvalidAlgorithmUseException;
 
 class None implements JWAInterface
 {
-    public function sign($message, $key)
+    public function hash($data): string
     {
         throw new InvalidAlgorithmUseException("The algorithm none cannot "
-            . "be used to sign a message.");
-    }
-
-    public function verify($message, $signature, $key)
-    {
-        throw new InvalidAlgorithmUseException("The algorithm none cannot "
-            . "be used to verify a signature.");
+            . "be used to hash a message.");
     }
 }

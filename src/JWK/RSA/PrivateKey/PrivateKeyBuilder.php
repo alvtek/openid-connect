@@ -6,12 +6,13 @@ namespace Alvtek\OpenIdConnect\JWK\RSA\PrivateKey;
 
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\JWK;
+use Alvtek\OpenIdConnect\JWK\JWKBuilder;
 use Alvtek\OpenIdConnect\JWK\RSA\Prime;
 use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey;
 use Alvtek\OpenIdConnect\JWK\RSA\PublicKey\PublicKeyBuilder;
 
 
-class PrivateKeyBuilder extends PublicKeyBuilder
+class PrivateKeyBuilder extends JWKBuilder
 {
     /** @var BigIntegerInterface */
     protected $d;
@@ -93,7 +94,7 @@ class PrivateKeyBuilder extends PublicKeyBuilder
      * @return PrivateKey
      * @throws InvalidArgumentException
      */
-    public static function fromResource($privateKey)
+    public static function fromResource($privateKey) : self
     {
         if (!is_resource($privateKey)) {
             throw new InvalidArgumentException("Argument must be a resource.");
@@ -118,7 +119,7 @@ class PrivateKeyBuilder extends PublicKeyBuilder
         return static::fromArray(array_merge($dataConverted));
     }
 
-    public static function fromJWKData(array $data)
+    public static function fromJWKData(array $data) : self
     {
         $dataConverted = [];
         
@@ -146,7 +147,7 @@ class PrivateKeyBuilder extends PublicKeyBuilder
         return static::fromArray($dataConverted);
     }
     
-    public static function fromArray(array $data)
+    public static function fromArray(array $data) : self
     {
         $bigIntKeys = static::$bigIntegerKeys;
         
@@ -168,7 +169,7 @@ class PrivateKeyBuilder extends PublicKeyBuilder
         return $builder;
     }
 
-    public function build() : JWK
+    public function build() : PrivateKey
     {
         return new PrivateKey($this);
     }

@@ -66,7 +66,7 @@ abstract class JWKBuilder
         return $this->{$name};
     }
 
-    abstract public function build() : JWK;
+    abstract public function build();
 
     /**
      * This method creates a JWKBuilder object from an array. Note that if the

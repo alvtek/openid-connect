@@ -10,7 +10,8 @@ use Alvtek\OpenIdConnect\JWK\KeyType;
 use Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
 use Alvtek\OpenIdConnect\BigIntegerInterface;
 use Alvtek\OpenIdConnect\BigInteger\BigIntegerFactory;
-use Alvtek\OpenIdConnect\Base64UrlSafeInterface;
+use Alvtek\OpenIdConnect\JWK\Exception\RuntimeException;
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 
 class PublicKeyBuilder extends JWKBuilder
 {
@@ -20,7 +21,7 @@ class PublicKeyBuilder extends JWKBuilder
     /** @var BigIntegerInterface */
     protected $e;
     
-    public function __construct(BigInteger $n, BigInteger $e)
+    public function __construct(BigIntegerInterface $n, BigIntegerInterface $e)
     {
         parent::__construct(new KeyType(KeyType::RSA));
 
@@ -33,22 +34,22 @@ class PublicKeyBuilder extends JWKBuilder
      * @param array $data
      * @return static
      */
-    public static function fromJWKData(Base64UrlSafeInterface $base64, array $data)
+    public static function fromJWKData(array $data) : self
     {
         $decoded = [];
 
         if (isset($data['n'])) {
-            $decoded['n'] = BigIntegerFactory::fromBytes($base64::decode($data['n']));
+            $decoded['n'] = BigIntegerFactory::fromBytes($data['n']);
         }
         
         if (isset($data['e'])) {
-            $decoded['e'] = BigIntegerFactory::fromBytes($base64::decode($data['e']));
+            $decoded['e'] = BigIntegerFactory::fromBytes($data['e']);
         }
         
         return parent::fromJWKData(array_merge($data, $decoded));
     }
 
-    public static function fromResource($keyResource)
+    public static function fromResource($keyResource) : self
     {
         if (!is_resource($keyResource)) {
             throw new InvalidArgumentException("Argument must be a resource");
@@ -56,26 +57,36 @@ class PublicKeyBuilder extends JWKBuilder
 
         $details = openssl_pkey_get_details($keyResource);
 
-        Assert::that($details)
-            ->isArray()
-            ->keyExists('rsa');
+        if (!is_array($details)) {
+            throw new RuntimeException("Failed to get details of RSA public key "
+                . "from resource.");
+        }
         
-        Assert::that($details['rsa'])
-            ->isArray()
-            ->choicesNotEmpty(['n', 'e',]);
-
+        if (!isset($details['rsa']) || !is_array($details['rsa'])) {
+            throw new RuntimeException("Unexpected response from openssl while "
+                . "attempting to parse key resource");
+        }
+        
+        if (!isset($details['rsa']['n']) || !isset($details['rsa']['e'])) {
+            throw new RuntimeException("Unexpected response from openssl while "
+                . "attempting to get key details");
+        }
+        
+        
         $rsa = $details['rsa'];
 
         return static::fromArray([
-            'n'  => new BigInteger($rsa['n'], 256),
-            'e'  => new BigInteger($rsa['e'], 256),
+            'n'  => BigIntegerFactory::fromBytes($rsa['n']),
+            'e'  => BigIntegerFactory::fromBytes($rsa['e']),
         ]);
     }
 
-    public static function fromArray(array $data)
+    public static function fromArray(array $data) : self
     {
-        Assert::that($data)
-            ->choicesNotEmpty(['n', 'e']);
+        
+        if (!isset($data['n']) || !isset($data['e'])) {
+            throw new InvalidArgumentException("Array keys n and e must be set.");
+        }
         
         $builder = new static($data['n'], $data['e']);
         
@@ -88,7 +99,7 @@ class PublicKeyBuilder extends JWKBuilder
         return $builder;
     }
 
-    public function build() : JWK
+    public function build() : PublicKey
     {
         return new PublicKey($this);
     }
