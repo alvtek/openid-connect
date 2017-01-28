@@ -8,6 +8,7 @@ interface AdapterInterface
 {
     public function toHex(BigIntegerInterface $a) : string;
     public function toDecimal(BigIntegerInterface $a) : string;
+    public function toInt(BigIntegerInterface $a) : int;
     
     public function decimalToBytes(string $decimal) : string;
     public function hexToBytes(string $hex) : string;

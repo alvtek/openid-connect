@@ -28,12 +28,7 @@ final class PublicKey extends JWK implements VerificationInterface
     public function verify(JWAInterface $jwa, $message, $signature)
     {
         // First check the length of the signature against the modulus
-        $unpackedModulusAsInteger = @unpack('n*', $this->n->toBytes());
-        if (empty($unpackedModulusAsInteger) || count($unpackedModulusAsInteger) > 1) {
-            throw new RuntimeException("Unexpected result when unpacking modulus");
-        }
-        $modulusAsInteger = $unpackedModulusAsInteger[1];
-        if (strlen($signature) > $modulusAsInteger) {
+        if (strlen($signature) > strlen($this->e->toInt())) {
             return false;
         }
         

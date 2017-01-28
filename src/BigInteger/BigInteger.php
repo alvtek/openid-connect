@@ -39,6 +39,11 @@ class BigInteger implements BigIntegerInterface
     {
         return $this->adapter->toDecimal($this);
     }
+    
+    public function toInt() : int
+    {
+        return $this->adapter->toInt();
+    }
 
     public function add(BigIntegerInterface $number): BigIntegerInterface
     {

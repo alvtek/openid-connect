@@ -6,19 +6,13 @@ use Alvtek\OpenIdConnect\BigInteger\Adapter\BCMathAdapter;
 use Alvtek\OpenIdConnect\BigInteger\Adapter\GMPAdapter;
 use Alvtek\OpenIdConnect\BigInteger\Adapter\NativeAdapter;
 use Alvtek\OpenIdConnect\BigInteger;
-use Alvtek\OpenIdConnect\Base64UrlSafeInterface;
+use Alvtek\OpenIdConnect\BigIntegerInterface;
 
 class BigIntegerFactory
-{
-    /**
-     * @param string $encoded
-     * @return BigIntegerInterface
-     */
-    public static function fromBase64UrlSafe(Base64UrlSafeInterface $base64, 
-        string $encoded) : BigIntegerInterface
+{   
+    public static function fromBytes(string $bytes) : BigIntegerInterface
     {
-        $byteString = $base64::decode($encoded);
-        return new BigInteger(static::getAdapter(), $byteString);
+        return new BigInteger(static::getAdapter(), $bytes);
     }
     
     /**

@@ -8,7 +8,9 @@ use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWK\JWKBuilder;
 use Alvtek\OpenIdConnect\JWK\KeyType;
 use Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
-use Alvtek\OpenIdConnect\Lib\BigIntegerInterface;
+use Alvtek\OpenIdConnect\BigIntegerInterface;
+use Alvtek\OpenIdConnect\BigInteger\BigIntegerFactory;
+use Alvtek\OpenIdConnect\Base64UrlSafeInterface;
 
 class PublicKeyBuilder extends JWKBuilder
 {
@@ -31,16 +33,16 @@ class PublicKeyBuilder extends JWKBuilder
      * @param array $data
      * @return static
      */
-    public static function fromJWKData(array $data)
+    public static function fromJWKData(Base64UrlSafeInterface $base64, array $data)
     {
         $decoded = [];
 
         if (isset($data['n'])) {
-            $decoded['n'] = BigInteger::fromBase64UrlSafe($data['n']);
+            $decoded['n'] = BigIntegerFactory::fromBytes($base64::decode($data['n']));
         }
         
         if (isset($data['e'])) {
-            $decoded['e'] = BigInteger::fromBase64UrlSafe($data['e']);
+            $decoded['e'] = BigIntegerFactory::fromBytes($base64::decode($data['e']));
         }
         
         return parent::fromJWKData(array_merge($data, $decoded));
