@@ -28,7 +28,6 @@ final class PublicKey extends JWK implements VerificationInterface
     
     public function verify(JWAInterface $jwa, $message, $signature)
     {
-        $start = microtime(true);
         $k = strlen($this->n->toBytes());
         
         // First check the length of the signature against the modulus
@@ -46,7 +45,6 @@ final class PublicKey extends JWK implements VerificationInterface
         // Now lets hash the message using the JWA
         $em2 = $this->emsaPkcs1V15Encode($jwa, $message, $k - 1);
         
-        echo "\nTime taken: " . (microtime(true) - $start);
         
         if (strcmp($em, $em2) !== 0) {
             return false;
