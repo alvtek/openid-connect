@@ -32,12 +32,12 @@ class BigInteger implements BigIntegerInterface
 
     public function toHex(): string
     {
-        return unpack('H*', $this->bytes);
+        return $this->adapter->toHex($this);
     }
     
     public function toDecimal(): string
     {
-        
+        return $this->adapter->toDecimal($this);
     }
 
     public function add(BigIntegerInterface $number): BigIntegerInterface

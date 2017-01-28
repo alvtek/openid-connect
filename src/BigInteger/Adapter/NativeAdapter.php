@@ -8,6 +8,30 @@ use Alvtek\OpenIdConnect\BigInteger\BigIntegerFactory;
 
 class NativeAdapter implements AdapterInterface
 {
+    public function toDecimal(BigIntegerInterface $a) : string
+    {
+        
+    }
+    
+    public function toHex(BigIntegerInterface $a) : string
+    {
+        return unpack('H*', $a->toBytes());
+    }
+    
+    public function decimalToBytes(string $decimal): string
+    {
+        
+    }
+    
+    public function hexToBytes(string $hex): string
+    {
+        
+    }
+    
+    public function integerToBytes(int $integer): string
+    {
+        $phpIntSize = (defined('PHP_INT_SIZE')) ? PHP_INT_SIZE : 4;
+    }
     
     public function add(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {

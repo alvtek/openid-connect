@@ -8,6 +8,33 @@ use Alvtek\OpenIdConnect\BigInteger\BigIntegerFactory;
 
 class GMPAdapter implements AdapterInterface
 {
+    public function toDecimal(BigIntegerInterface $a): string
+    {
+        return gmp_strval($a->toBytes(), 10);
+    }
+
+    public function toHex(BigIntegerInterface $a): string
+    {
+        return gmp_strval($a->toBytes(), 16);
+    }
+    
+    public function decimalToBytes(string $decimal): string
+    {
+        $gmpNumber = gmp_init($decimal, 10);
+        return gmp_export($gmpNumber);
+    }
+
+    public function hexToBytes(string $hex): string
+    {
+        $gmpNumber = gmp_init($hex, 16);
+        return gmp_export($gmpNumber);
+    }
+
+    public function integerToBytes(int $integer): string
+    {
+        return gmp_export($integer);
+    }
+    
     public function add(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
         $gmpA = gmp_init($a->toHex(), 16);

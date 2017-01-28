@@ -6,6 +6,7 @@ use Alvtek\OpenIdConnect\BigInteger\Adapter\BCMathAdapter;
 use Alvtek\OpenIdConnect\BigInteger\Adapter\GMPAdapter;
 use Alvtek\OpenIdConnect\BigInteger\Adapter\NativeAdapter;
 use Alvtek\OpenIdConnect\BigInteger;
+use Alvtek\OpenIdConnect\Base64UrlSafeInterface;
 
 class BigIntegerFactory
 {
@@ -13,9 +14,11 @@ class BigIntegerFactory
      * @param string $encoded
      * @return BigIntegerInterface
      */
-    public static function fromBase64UrlSafe(string $encoded) : BigIntegerInterface
+    public static function fromBase64UrlSafe(Base64UrlSafeInterface $base64, 
+        string $encoded) : BigIntegerInterface
     {
-        // TODO: Implement fromBase64UrlSafe() method.
+        $byteString = $base64::decode($encoded);
+        return new BigInteger(static::getAdapter(), $byteString);
     }
     
     /**
@@ -24,12 +27,9 @@ class BigIntegerFactory
      */
     public static function fromHex(string $hex) : BigIntegerInterface
     {
-        if (preg_match('/[^A-Z0-9]/i')) {
-            // throw exception, only hex characters allowed
-        }
-        
-        $byteString = pack('H*', $hex);
-        return new BigInteger(static::getAdapter(), $byteString);
+        $adapter = static::getAdapter();
+        $byteString = $adapter->hexToBytes($hex);
+        return new BigInteger($adapter, $byteString);
     }
     
     /**
@@ -38,7 +38,9 @@ class BigIntegerFactory
      */
     public static function fromDecimal(string $number) : BigIntegerInterface
     {
-        // TODO: Implement fromString() method.
+        $adapter = static::getAdapter();
+        $byteString = $adapter->decimalToBytes($number);
+        return new BigInteger($adapter, $byteString);
     }
     
     /**
@@ -47,7 +49,9 @@ class BigIntegerFactory
      */
     public static function fromInteger(int $integer) : BigIntegerInterface
     {
-        // TODO: Implement fromInteger() method.
+        $adapter = static::getAdapter();
+        $byteString = $adapter->integerToBytes($integer);
+        return new BigInteger($adapter, $byteString);
     }
     
     private static function getAdapter()

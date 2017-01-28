@@ -8,6 +8,31 @@ use Alvtek\OpenIdConnect\BigInteger\BigIntegerFactory;
 
 class BCMathAdapter implements AdapterInterface
 {
+    public function toDecimal(BigIntegerInterface $a): string
+    {
+        
+    }
+
+    public function toHex(BigIntegerInterface $a): string
+    {
+        
+    }
+    
+    public function decimalToBytes(string $decimal): string
+    {
+        
+    }
+
+    public function hexToBytes(string $hex): string
+    {
+        
+    }
+
+    public function integerToBytes(int $integer): string
+    {
+        
+    }
+    
     public function add(BigIntegerInterface $a, BigIntegerInterface $b): BigIntegerInterface
     {
         $result = bcadd($a->toDecimal(), $b->toDecimal());
