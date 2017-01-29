@@ -7,7 +7,12 @@ use Alvtek\OpenIdConnect\JWA\Exception\RuntimeException;
 
 final class RS384 implements JWAInterface
 {
-    public function hash($data): string
+    public function getAlgorithmName()
+    {
+        return 'sha384';
+    }
+    
+    public function hash(string $data): string
     {
         $hashed = hash('sha384', $data, true);
         
@@ -17,10 +22,5 @@ final class RS384 implements JWAInterface
         }
         
         return $hashed;
-    }
-    
-    public function asn1DigestAlgorithm() : string
-    {
-        return pack('H*', '3041300d060960864801650304020205000430');
     }
 }
