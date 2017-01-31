@@ -3,40 +3,41 @@
 namespace Alvtek\OpenIdConnect\JWK\RSA;
 
 use Alvtek\OpenIdConnect\JWAInterface;
-use Alvtek\OpenIdConnect\JWK;
+use Alvtek\OpenIdConnect\JWK\RSA;
 use Alvtek\OpenIdConnect\JWK\RSA\Prime;
 use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey\PrivateKeyBuilder;
 use Alvtek\OpenIdConnect\JWK\SigningInterface;
+use Alvtek\OpenIdConnect\JWK\VerificationInterface;
 use Alvtek\OpenIdConnect\Lib\BigIntegerInterface;
 
-final class PrivateKey extends JWK implements SigningInterface
+final class PrivateKey extends RSA implements SigningInterface, VerificationInterface
 {
     /** @var BigIntegerInterface */
-    private $n;
+    protected $n;
 
     /** @var BigIntegerInterface */
-    private $e;
+    protected $e;
     
     /** @var BigIntegerInterface */
-    private $d;
+    protected $d;
 
     /** @var BigIntegerInterface */
-    private $p;
+    protected $p;
 
     /** @var BigIntegerInterface */
-    private $q;
+    protected $q;
 
     /** @var BigIntegerInterface */
-    private $dp;
+    protected $dp;
 
     /** @var BigIntegerInterface */
-    private $dq;
+    protected $dq;
 
     /** @var BigIntegerInterface */
-    private $qi;
+    protected $qi;
 
     /** @var Prime[] */
-    private $otherPrimes;
+    protected $otherPrimes;
 
     public function __construct(PrivateKeyBuilder $privateKeyBuilder)
     {
@@ -61,6 +62,11 @@ final class PrivateKey extends JWK implements SigningInterface
     public function sign(JWAInterface $jwa, $message) : string
     {
         return $jwa->sign($message, $this->toPem());
+    }
+    
+    public function verify(JWAInterface $jwa, $message, $signature)
+    {
+        return false;
     }
 
     /**

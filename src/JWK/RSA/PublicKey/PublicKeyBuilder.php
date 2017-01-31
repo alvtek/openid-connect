@@ -4,33 +4,26 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
 
+use Alvtek\OpenIdConnect\BigInteger\BigIntegerFactory;
+use Alvtek\OpenIdConnect\BigIntegerInterface;
 use Alvtek\OpenIdConnect\JWK\JWKBuilder;
 use Alvtek\OpenIdConnect\JWK\KeyType;
 use Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
-use Alvtek\OpenIdConnect\BigIntegerInterface;
-use Alvtek\OpenIdConnect\BigInteger\BigIntegerFactory;
-use Alvtek\OpenIdConnect\JWK\Exception\RuntimeException;
-use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
-use Alvtek\OpenIdConnect\RSA;
 
 class PublicKeyBuilder extends JWKBuilder
 {
     /** @var BigIntegerInterface */
-    private $n;
+    protected $n;
 
     /** @var BigIntegerInterface */
-    private $e;
+    protected $e;
     
-    /** @var RSA */
-    private $rsa;
-    
-    public function __construct(BigIntegerInterface $n, BigIntegerInterface $e, RSA $rsa)
+    public function __construct(BigIntegerInterface $n, BigIntegerInterface $e)
     {
         parent::__construct(new KeyType(KeyType::RSA));
 
-        $this->n = clone $n;
-        $this->e = clone $e;
-        $this->rsa = $rsa;
+        $this->n = $n;
+        $this->e = $e;
     }
 
     /**

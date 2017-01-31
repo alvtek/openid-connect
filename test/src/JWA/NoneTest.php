@@ -9,19 +9,11 @@ use PHPUnit\Framework\TestCase;
 
 class NoneTest extends TestCase
 {
-    public function testSignException()
+    public function testHashException()
     {
         $this->expectException(InvalidAlgorithmUseException::class);
     
         $jwa = new None;
-        $jwa->sign('message', 'key');
-    }
-
-    public function testVerifyException()
-    {
-        $this->expectException(InvalidAlgorithmUseException::class);
-    
-        $jwa = new None;
-        $jwa->verify('message', 'signature', 'key');
+        $jwa->hash('message');
     }
 }

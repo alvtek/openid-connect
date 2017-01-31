@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect\JWA;
 
-use Alvtek\OpenIdConnect\JWAInterface;
+use Alvtek\OpenIdConnect\JWA\DigestInformationProviderInterface;
 use Alvtek\OpenIdConnect\JWA\Exception\RuntimeException;
+use Alvtek\OpenIdConnect\JWAInterface;
 
-final class RS256 implements JWAInterface
+final class RS256 implements JWAInterface, DigestInformationProviderInterface
 {
-    public function getAlgorithmName()
+    public function getDigestInfo() : string
     {
-        return 'sha256';
+        return pack('H*', '3031300d060960864801650304020105000420');
     }
     
     public function hash(string $data): string

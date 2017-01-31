@@ -8,7 +8,6 @@ use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Exception\RuntimeException;
 use Alvtek\OpenIdConnect\JWA\JWAFactory;
 use Alvtek\OpenIdConnect\JWAInterface;
-use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWK\KeyOperation\KeyOperationCollection as KeyOperations;
 
 abstract class JWKBuilder

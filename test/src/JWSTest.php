@@ -89,6 +89,7 @@ class JWSTest extends TestCase
      *
      */
 
+    /*
     public function testExpiry()
     {
         $privateKey = RSAPrivateKeyBuilder::fromResource($this->rsaPrivateKey)->build();
@@ -146,10 +147,8 @@ class JWSTest extends TestCase
         ], $this->testPrivateKey);
 
         $this->assertFalse($notExpiredJwt->isExpired(), "The created token should be recognised as not expired");
-         * */
     }
-
-    /*
+    
     public function testJwtEarly()
     {
         $earlyJwt = Jwt::createRS256FromData([

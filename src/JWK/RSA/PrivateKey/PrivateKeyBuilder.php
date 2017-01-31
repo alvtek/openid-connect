@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\JWK\RSA\PrivateKey;
 
+use Alvtek\OpenIdConnect\BigIntegerInterface;
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
-use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWK\JWKBuilder;
 use Alvtek\OpenIdConnect\JWK\RSA\Prime;
 use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey;
-use Alvtek\OpenIdConnect\JWK\RSA\PublicKey\PublicKeyBuilder;
 
 
 class PrivateKeyBuilder extends JWKBuilder
@@ -49,8 +48,11 @@ class PrivateKeyBuilder extends JWKBuilder
 
     public function __construct(array $data)
     {
-        Assert::that($data)
-            ->choicesNotEmpty(static::$bigIntegerKeys);
+        if (count(array_intersect(static::$bigIntegerKeys, $data)) != 
+            count(static::$bigIntegerKeys)) {
+            throw new InvalidArgumentException(sprintf("the following array "
+                . "keys must be set: %s", implode(', ', static::$bigIntegerKeys)));
+        }
         
         foreach (static::$bigIntegerKeys as $bigIntegerKey) {
             if (!$data[$bigIntegerKey] instanceof BigInteger) {
@@ -81,9 +83,12 @@ class PrivateKeyBuilder extends JWKBuilder
      */
     public function setOtherPrimes(array $otherPrimes)
     {
-        Assert::that($otherPrimes)
-            ->all()
-            ->isInstanceOf(Prime::class);
+        foreach ($otherPrimes as $prime) {
+            if (!$prime instanceof Prime) {
+                throw new InvalidArgumentException(sprintf("Expecting an "
+                    . "array of type %s", Prime::class));
+            }
+        }
 
         $this->otherPrimes = $otherPrimes;
     }
@@ -94,6 +99,7 @@ class PrivateKeyBuilder extends JWKBuilder
      * @return PrivateKey
      * @throws InvalidArgumentException
      */
+    /*
     public static function fromResource($privateKey) : self
     {
         if (!is_resource($privateKey)) {
@@ -102,6 +108,9 @@ class PrivateKeyBuilder extends JWKBuilder
 
         $details = openssl_pkey_get_details($privateKey);
         
+        if (!is_array($details) || !array_key_exists($details['rsa'])) {
+            throw RuntimeException("")
+        }
         Assert::that($details)
             ->isArray()
             ->keyExists('rsa');
@@ -118,6 +127,8 @@ class PrivateKeyBuilder extends JWKBuilder
         
         return static::fromArray(array_merge($dataConverted));
     }
+     *
+     */
 
     public static function fromJWKData(array $data) : self
     {
@@ -149,15 +160,6 @@ class PrivateKeyBuilder extends JWKBuilder
     
     public static function fromArray(array $data) : self
     {
-        $bigIntKeys = static::$bigIntegerKeys;
-        
-        Assert::that($data)
-            ->choicesNotEmpty($bigIntKeys);
-        
-        if (!isset($data['rsaToolkit'])) {
-            $data['rsaToolkit'] = new phpseclibRSA();
-        }
-        
         $builder =  new static($data);
         
         foreach (static::$arrayMappings as $key => $method) {
