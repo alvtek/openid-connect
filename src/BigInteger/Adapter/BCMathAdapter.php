@@ -13,12 +13,37 @@ class BCMathAdapter implements AdapterInterface
 {
     public function toDecimal(BigIntegerInterface $a): string
     {
-        return $this->bcbindec($a->toBytes());
+        $bytes = $a->toBytes();
+        $twoc = false;
+        
+        $isNegative = ((ord($bytes[0]) & 0x80) && $twoc);
+        
+        if ($isNegative) {
+            $bytes = ~$bytes;
+        }
+        
+        $len = (mb_strlen($bytes, '8bit') + 3) & 0xfffffffc;
+        $bytes = str_pad($bytes, $len, chr(0), STR_PAD_LEFT);
+        $result = '0';
+        
+        for ($i = 0; $i < $len; $i += 4) {
+            $result = bcmul($result, '4294967296'); // 2**32
+            $result = bcadd(
+                $result,
+                (string) (0x1000000 * ord($bytes[$i]) + ((ord($bytes[$i + 1]) << 16) | (ord($bytes[$i + 2]) << 8) | ord($bytes[$i + 3])))
+            );
+        }
+        
+        if ($isNegative) {
+            $result = bcsub('-' . $result, '1');
+        }
+        
+        return $result;
     }
 
     public function toHex(BigIntegerInterface $a): string
     {
-        
+        return \implode('', \unpack('H*', $a->toBytes()));
     }
     
     /**
@@ -110,59 +135,5 @@ class BCMathAdapter implements AdapterInterface
     {
         $result = bcpowmod($a->toDecimal(), $exponent, $modulus->toDecimal());
         return BigIntegerFactory::fromDecimal($result);
-    }
-    
-    private function bchexdec(string $hex)
-    {
-        if(strlen($hex) == 1) {
-            return hexdec($hex);
-        }
-        
-        $remain = substr($hex, 0, -1);
-        $last = substr($hex, -1);
-        
-        return bcadd(bcmul(16, $this->bchexdec($remain)), hexdec($last));
-    }
-    
-    private function bcdechex(string $dec)
-    {
-        $last = bcmod($dec, 16);
-        $remain = bcdiv(bcsub($dec, $last), 16);
-        
-        if($remain == 0) {
-            return dechex($last);
-        }
-        
-        return $this->bcdechex($remain).dechex($last);
-    }
-    
-    private function bcbindec(string $bin)
-    {
-        if (strlen($bin) == 1) {
-            return bindec($bin);
-        }
-        
-        $remain = substr($bin, 0, -1);
-        $last = substr($bin, -1);
-        
-        return bcadd(bcmul(256, $this->bcbindec($remain)), bindec($last));
-        
-    }
-    
-    private function bcdecbin(string $decimal)
-    {
-        $last = bcmod($decimal, 256);
-        $remain = bcdiv(bcsub($decimal, $last), 256);
-    
-        if($remain == 0) {
-            return decbin($last);
-        }
-
-        return $this->bcdecbin($remain) . decbin($last);
-    }
-    
-    private function bcbinhex(string $bytes)
-    {
-        
     }
 }

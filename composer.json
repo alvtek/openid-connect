@@ -13,6 +13,9 @@
     "php": "^7"
   },
   "require-dev": {
+    "ext-gmp": "*",
+    "ext-openssl": "*",
+    "ext-bcmath": "*",
     "phpunit/phpunit": "^5.7"
   },
   "suggest": {
