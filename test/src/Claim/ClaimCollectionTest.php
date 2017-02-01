@@ -50,13 +50,6 @@ class ClaimCollectionTest extends TestCase
         new ClaimCollection([$mockClaim]);
     }
 
-    public function testNonArrayConstructorException()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        new ClaimCollection('this is not a claim!');
-    }
-
     public function testInvalidArrayConstructorException()
     {
         $this->expectException(\InvalidArgumentException::class);

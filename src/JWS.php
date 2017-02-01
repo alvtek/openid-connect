@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect;
 
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\JWA\JWAFactory;
 use Alvtek\OpenIdConnect\JWK\SigningInterface;
 use Alvtek\OpenIdConnect\JWK\VerificationInterface;
@@ -33,12 +34,12 @@ class JWS
      * @param string $signature
      * @param string $message
      */
-    private function __construct(Header $header, $payload, $signature, $message)
+    private function __construct(Header $header, string $payload, string $signature, string $message)
     {
-        Assert::that($payload)->notEmpty()->string();
-        Assert::that($signature)->string();
-        Assert::that($message)->string();
-
+        if (empty($payload)) {
+            throw new InvalidArgumentException("Payload must be a non empty string");
+        }
+        
         $this->header = $header;
         $this->payload = $payload;
         $this->signature = $signature;
@@ -55,6 +56,11 @@ class JWS
         }
         
         $headerData = json_decode($base64->decode($segments[0]), true);
+        
+        if (!is_array($headerData) || $headerData === false) {
+            throw new InvalidJWSException("The JWS data is invalid");
+        }
+        
         $payload = $base64->decode($segments[1]);
         $signature = $base64->decode($segments[2]);
 
@@ -69,9 +75,11 @@ class JWS
      * @param string $payload Can be any string but is usually a Json encoded JWT
      * @return static
      */
-    public static function createJWS(Header $header, SigningInterface $key, $payload)
+    public static function createJWS(Header $header, SigningInterface $key, string $payload)
     {
-        Assert::that($payload)->notEmpty()->string();
+        if (empty($payload)) {
+            throw new InvalidArgumentException("Payload must be a non empty string");
+        }
         
         $headerEncoded = rtrim(Base64UrlSafe::encode($header->toJson()), '=');
         $payloadEncoded = rtrim(Base64UrlSafe::encode($payload), '=');

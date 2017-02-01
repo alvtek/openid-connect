@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect\JWS;
 
 use Alvtek\OpenIdConnect\JWS\Header\Exception\InvalidJWSHeaderException;
 use Alvtek\OpenIdConnect\JWS\Header\Exception\UndefinedParameterException;
-
-use Assert\Assert;
 
 class Header
 {
@@ -44,10 +44,8 @@ class Header
      * @param array $data
      * @throws InvalidJWSHeaderException
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
-        Assert::that($data)->isArray();
-        
         if (!key_exists(self::ALGORITHM, $data) || empty($data[self::ALGORITHM])) {
             throw new InvalidJWSHeaderException("%s key must be set in the "
                 . "JWS header data.");

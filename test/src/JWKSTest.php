@@ -2,6 +2,8 @@
 
 namespace Alvtek\OpenIdConnectTest;
 
+use Alvtek\OpenIdConnect\Base64UrlSafe;
+use Alvtek\OpenIdConnect\Base64UrlSafeInterface;
 use Alvtek\OpenIdConnect\JWK;
 use Alvtek\OpenIdConnect\JWKS;
 use Alvtek\OpenIdConnect\JWS;
@@ -9,20 +11,25 @@ use PHPUnit\Framework\TestCase;
 
 class JWKSTest extends TestCase
 {
-    /* @var array */
+    /** @var array */
     private $jwksData;
 
-    /* @var stdClass */
+    /** @var stdClass */
     private $jwksDataObject;
 
-    /* @var array */
+    /** @var array */
     private $jwsData;
 
-    /* @var string */
+    /** @var string */
     private $testPrivateKey;
+    
+    /** @var Base64UrlSafeInterface */
+    private $base64UrlSafe;
     
     public function setup()
     {
+        $this->base64UrlSafe = new Base64UrlSafe;
+        
         $jwksJson = file_get_contents(
             'test' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'jwks.json'
         );
@@ -54,10 +61,10 @@ class JWKSTest extends TestCase
     public function testSignatureVerification()
     {
         $jwks = JWKS::fromJWKSData($this->jwksData);
-        $jws = JWS::fromSerialised($this->jwsData);
+        $jws = JWS::fromSerialised($this->base64UrlSafe, $this->jwsData);
         
         $this->assertTrue($jwks->verifyJWS($jws), "The JWT and JWKS fixtures "
-            . "should produce a valid and verifiable signature");
+            . "must produce a valid and verifiable signature");
     }
 
     public function testArrayAccess()
@@ -101,19 +108,18 @@ class JWKSTest extends TestCase
             'idp' => 'idsrv',
             'amr' => ['password']
         ];
-
-        $headerEncoded = Base64UrlSafe::encode(json_encode($header));
-        $payloadEncoded = Base64UrlSafe::encode(json_encode($payload));
+        
+        $headerEncoded = $this->base64UrlSafe->encode(json_encode($header));
+        $payloadEncoded = $this->base64UrlSafe->encode(json_encode($payload));
 
         $signature = '';
         $result = openssl_sign($headerEncoded . '.' .
             $payloadEncoded, $signature, $this->testPrivateKey, 'SHA256');
 
         $this->assertTrue($result, "Failed to assert that message could be signed using openssl_sign");
-        $signatureEncoded = Base64UrlSafe::encode($signature);
+        $signatureEncoded = $this->base64UrlSafe->encode($signature);
 
-        $validToken = JWS::fromSerialised(
-            "$headerEncoded.$payloadEncoded.$signatureEncoded");
+        $validToken = JWS::fromSerialised($this->base64UrlSafe, "$headerEncoded.$payloadEncoded.$signatureEncoded");
 
         $this->assertFalse($jwks->verifyJWS($validToken));
     }

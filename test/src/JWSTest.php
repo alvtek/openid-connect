@@ -2,12 +2,10 @@
 
 namespace Alvtek\OpenIdConnectTest;
 
-use Alvtek\OpenIdConnect\JWA\JWAFactory;
-use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey\PrivateKeyBuilder as RSAPrivateKeyBuilder;
+use Alvtek\OpenIdConnect\Base64UrlSafe;
+use Alvtek\OpenIdConnect\Base64UrlSafeInterface;
 use Alvtek\OpenIdConnect\JWS;
 use Alvtek\OpenIdConnect\JWS\Exception\InvalidJWSException;
-use Alvtek\OpenIdConnect\JWS\Header;
-use Alvtek\OpenIdConnect\JWT;
 use Alvtek\OpenIdConnect\Provider;
 use Alvtek\OpenIdConnect\Provider\Option;
 use Alvtek\OpenIdConnect\Provider\Option\OptionCollection;
@@ -19,8 +17,13 @@ class JWSTest extends TestCase
     
     private $rsaPrivateKey;
     
+    /** @var  Base64UrlSafeInterface */
+    private $base64UrlSafe;
+    
     public function setup()
     {
+        $this->base64UrlSafe = new Base64UrlSafe;
+        
         $this->validJWS = file_get_contents(TEST_ASSETS . DIRECTORY_SEPARATOR 
             . 'accesstoken.txt');
         
@@ -30,7 +33,8 @@ class JWSTest extends TestCase
     
     public function testJWSFromSerialisation()
     {
-        $jws = JWS::fromSerialised($this->validJWS);
+        $base64UrlSafe = new Base64UrlSafe;
+        $jws = JWS::fromSerialised($base64UrlSafe, $this->validJWS);
         $this->assertEquals($this->validJWS, (string) $jws);
     }
 
@@ -38,13 +42,13 @@ class JWSTest extends TestCase
     public function testInvalidSegmentCount()
     {
         $this->expectException(InvalidJWSException::class);
-        JWS::fromSerialised('saelvkjsaekl.tagkljseklja');
+        JWS::fromSerialised($this->base64UrlSafe, 'saelvkjsaekl.tagkljseklja');
     }
 
     public function testMalformed()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        JWS::fromSerialised('saelvkjsaekl.tagkljseklja.agselkjksaelgj');
+        $this->expectException(InvalidJWSException::class);
+        JWS::fromSerialised($this->base64UrlSafe, 'saelvkjsaekl.tagkljseklja.agselkjksaelgj');
     }
 
     public function testAlgorithmSupported()
@@ -75,7 +79,7 @@ class JWSTest extends TestCase
             ->method('options')
             ->willReturn($mockOptions);
         
-        $jws = JWS::fromSerialised($this->validJWS);
+        $jws = JWS::fromSerialised($this->base64UrlSafe, $this->validJWS);
         $this->assertTrue($jws->providerSupportsAlgorithm($mockProvider));
     }
 
