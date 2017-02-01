@@ -35,7 +35,7 @@ class JWSTest extends TestCase
     {
         $base64UrlSafe = new Base64UrlSafe;
         $jws = JWS::fromSerialised($base64UrlSafe, $this->validJWS);
-        $this->assertEquals($this->validJWS, (string) $jws);
+        $this->assertEquals($this->validJWS, $jws->serialise($base64UrlSafe));
     }
 
     

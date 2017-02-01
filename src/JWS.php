@@ -10,6 +10,7 @@ use Alvtek\OpenIdConnect\JWK\SigningInterface;
 use Alvtek\OpenIdConnect\JWK\VerificationInterface;
 use Alvtek\OpenIdConnect\JWS\Exception\InvalidJWSException;
 use Alvtek\OpenIdConnect\JWS\Header;
+use Alvtek\OpenIdConnect\Base64UrlSafeInterface;
 
 /**
  * This class represents a generic Json Web Signature. 
@@ -75,14 +76,14 @@ class JWS
      * @param string $payload Can be any string but is usually a Json encoded JWT
      * @return static
      */
-    public static function createJWS(Header $header, SigningInterface $key, string $payload)
+    public static function createJWS(Base64UrlSafeInterface $base64, Header $header, SigningInterface $key, string $payload)
     {
         if (empty($payload)) {
             throw new InvalidArgumentException("Payload must be a non empty string");
         }
         
-        $headerEncoded = rtrim(Base64UrlSafe::encode($header->toJson()), '=');
-        $payloadEncoded = rtrim(Base64UrlSafe::encode($payload), '=');
+        $headerEncoded = rtrim($base64->encode($header->toJson()), '=');
+        $payloadEncoded = rtrim($base64->encode($payload), '=');
         
         $jwa = JWAFactory::createFromName($header->getParameter(Header::ALGORITHM));
 
@@ -94,9 +95,9 @@ class JWS
     /** 
      * @return string 
      */
-    public function __toString()
+    public function serialise(Base64UrlSafeInterface $base64)
     {
-        return $this->message() . '.' . rtrim(Base64UrlSafe::encode($this->signature), '=');
+        return $this->message() . '.' . rtrim($base64->encode($this->signature), '=');
     }
     
     /** @return string */

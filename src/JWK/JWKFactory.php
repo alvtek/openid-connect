@@ -7,6 +7,7 @@ use Alvtek\OpenIdConnect\Exception\RuntimeException;
 use Alvtek\OpenIdConnect\Exception\UnsupportedException;
 use Alvtek\OpenIdConnect\JWK\RSA\PrivateKey\PrivateKeyBuilder;
 use Alvtek\OpenIdConnect\JWK\RSA\PublicKey\PublicKeyBuilder;
+use Alvtek\OpenIdConnect\Base64UrlSafe;
 
 class JWKFactory
 {
@@ -19,6 +20,8 @@ class JWKFactory
             throw new InvalidArgumentException("kty key must be set");
         }
         
+        $base64UrlSafe = new Base64UrlSafe;
+        
         switch ($data['kty']) {
             case KeyType::RSA:
                 if (isset($data['d'], $data['p'], $data['q'], $data['dp'], 
@@ -27,7 +30,8 @@ class JWKFactory
                 }
                 
                 if (isset($data['n'], $data['e'])) {
-                    return PublicKeyBuilder::fromJWKData($data)->build();
+                    return PublicKeyBuilder::fromJWKData($data)
+                        ->build();
                 }
                 
                 throw new RuntimeException("RSA key does not appear to be valid");

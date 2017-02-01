@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
 
+use Alvtek\OpenIdConnect\Base64UrlSafeInterface;
 use Alvtek\OpenIdConnect\BigInteger\BigIntegerFactory;
 use Alvtek\OpenIdConnect\BigIntegerInterface;
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\JWK\JWKBuilder;
 use Alvtek\OpenIdConnect\JWK\KeyType;
 use Alvtek\OpenIdConnect\JWK\RSA\PublicKey;
@@ -31,21 +33,25 @@ class PublicKeyBuilder extends JWKBuilder
      * @param array $data
      * @return static
      */
-    public static function fromJWKData(array $data) : self
+    public static function fromJWKData(Base64UrlSafeInterface $base64UrlSafe, 
+        array $data) : self
     {
         $decoded = [];
 
         if (isset($data['n'])) {
-            $decoded['n'] = BigIntegerFactory::fromBytes($data['n']);
+            $decoded['n'] = BigIntegerFactory::fromBytes(
+                $base64UrlSafe->decode($data['n']));
         }
         
         if (isset($data['e'])) {
-            $decoded['e'] = BigIntegerFactory::fromBytes($data['e']);
+            $decoded['e'] = BigIntegerFactory::fromBytes(
+                $base64UrlSafe->decode($data['e']));
         }
         
         return parent::fromJWKData(array_merge($data, $decoded));
     }
 
+    /*
     public static function fromResource($keyResource) : self
     {
         if (!is_resource($keyResource)) {
@@ -77,6 +83,8 @@ class PublicKeyBuilder extends JWKBuilder
             'e'  => BigIntegerFactory::fromBytes($rsa['e']),
         ]);
     }
+     * 
+     */
 
     public static function fromArray(array $data) : self
     {
