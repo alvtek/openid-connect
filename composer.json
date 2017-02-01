@@ -15,6 +15,11 @@
   "require-dev": {
     "phpunit/phpunit": "^5.7"
   },
+  "suggest": {
+    "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
+    "ext-openssl": "Install the openssl extension to improve the speed of RSA operations and for increased security.",
+    "paragonie/random_compat": "Provides a secure Base64 library."
+  },
   "autoload": {
     "psr-4": {
       "Alvtek\\OpenIdConnect\\": "src/"
