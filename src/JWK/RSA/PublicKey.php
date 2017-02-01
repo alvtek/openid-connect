@@ -41,10 +41,10 @@ final class PublicKey extends RSA implements VerificationInterface
         $em = $this->i2osp($m, $k - 1);
         $em2 = $this->emsaPkcs1V15Encode($jwa, $message, $k - 1);
         
-        if (strcmp($em, $em2) !== 0) {
+        if ($em !== $em2) {
             return false;
         }
-        
+    
         return true;
     }
 }

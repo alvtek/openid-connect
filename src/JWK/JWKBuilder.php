@@ -52,7 +52,7 @@ abstract class JWKBuilder
 
     public function __construct(KeyType $keyType)
     {
-        $this->keyType = $keyType;
+        $this->kty = $keyType;
     }
 
     public function __get($name)

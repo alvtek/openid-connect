@@ -52,7 +52,7 @@ class JWKS implements Iterator, Countable, JsonSerializable
         foreach ($data['keys'] as $keyData) {
             $keys[] = JWKFactory::fromJWKData($keyData);
         }
-
+        
         return new static($keys);
     }
 
@@ -109,7 +109,7 @@ class JWKS implements Iterator, Countable, JsonSerializable
         }
 
         $verifyingKey = $this->keys[$jws->signingKeyId()];
-
+        
         if (!$verifyingKey instanceof VerificationInterface) {
             throw new RuntimeException("The key in the Json Web Key Set is "
                 . "not a verification key.");

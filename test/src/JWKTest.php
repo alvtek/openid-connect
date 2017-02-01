@@ -22,7 +22,7 @@ class JWKTest extends TestCase
 
         $this->assertInstanceOf(JWK::class, $jwk);
     }
-
+    
     public function testECExceptionThrown()
     {
         $this->expectException(UnsupportedException::class);
