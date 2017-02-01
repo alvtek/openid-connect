@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect\Provider\Option;
 
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Provider\Option;
-
-use Alvtek\OpenIdConnect\Provider\Option\Exception\UndefinedOptionException;
 use Alvtek\OpenIdConnect\Provider\Option\Exception\DuplicateOptionTypeException;
-
-use Assert\Assert;
+use Alvtek\OpenIdConnect\Provider\Option\Exception\UndefinedOptionException;
 
 class OptionCollection
 {
@@ -19,17 +19,16 @@ class OptionCollection
     /**
      * @param Option[] $options
      */
-    public function __construct($options)
+    public function __construct(array $options)
     {
-        Assert::that($options)
-            ->isArray()
-            ->all()
-            ->isInstanceOf(Option::class);
-       
         $this->position = 0;
         $this->options = [];
         
         foreach ($options as $option) {
+            if (!$option instanceof Option) {
+                throw new InvalidArgumentException(sprintf("Options must be an array of type %s", Option::class));
+            }
+            
             if ($this->hasOptionType($option->type())) {
                 throw new DuplicateOptionTypeException(sprintf("An option of "
                     . "type '%s' already exists.", $option->type()));
@@ -70,11 +69,13 @@ class OptionCollection
      * @param array $types
      * @return boolean
      */
-    public function hasOptionTypes($types)
+    public function hasOptionTypes(array $types)
     {
-        Assert::that($types)->isArray()->all()->string();
-
         foreach ($types as $type) {
+            if (!is_string($type)) {
+                throw new InvalidArgumentException("Argument must be an array of strings");
+            }
+            
             if (!$this->hasOptionType($type)) {
                 return false;
             }
@@ -101,10 +102,8 @@ class OptionCollection
      * @return Option
      * @throws UndefinedOptionException
      */
-    public function get($type)
+    public function get(string $type)
     {
-        Assert::that($type)->notEmpty()->string();
-
         foreach ($this->options as $option) {
             if ($option->type() === $type) {
                 return $option;

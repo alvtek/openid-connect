@@ -2,8 +2,7 @@
 
 namespace Alvtek\OpenIdConnect\Provider;
 
-use Assert\Assert;
-
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use JsonSerializable;
 
 /**
@@ -17,10 +16,13 @@ class Option implements JsonSerializable
     /** @var array */
     private $values;
 
-    public function __construct($type, $values)
+    public function __construct(string $type, array $values)
     {
-        Assert::that($type)->string();
-        Assert::that($values)->isArray()->all()->scalar();
+        foreach ($values as $value) {
+            if (!is_scalar($value)) {
+                throw new InvalidArgumentException("values must be an array of scalar values");
+            }
+        }
         
         $this->type = $type;
         $this->values = $values;

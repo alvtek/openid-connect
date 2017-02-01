@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect;
 
-use Assert\Assert;
-
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use JsonSerializable;
 
 class Claim implements JsonSerializable
@@ -18,9 +17,14 @@ class Claim implements JsonSerializable
     
     public function __construct(string $type, $value)
     {
-        Assert::that($type)->notEmpty();
-        Assert::that($value)->scalar();
-
+        if (empty($type)) {
+            throw new InvalidArgumentException("Claim type argument must be a non empty string");
+        }
+        
+        if (!is_scalar($value)) {
+            throw new InvalidArgumentException("Claim value must be a scalar value");
+        }
+        
         $this->type = $type;
         $this->value = $value;
     }
@@ -37,8 +41,9 @@ class Claim implements JsonSerializable
     
     public function fromArray(array $data)
     {
-        Assert::that($data)
-            ->choicesNotEmpty(['type', 'value']);
+        if (!array_key_exists($data, 'type') || !array_key_exists($data, 'value')) {
+            throw new InvalidArgumentException("'type' and 'value' array keys must be set");
+        }
         
         return new static($data['type'], $data['value']);
     }

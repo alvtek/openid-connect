@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect\Provider\Flag;
 
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Provider\Flag;
-
-use Alvtek\OpenIdConnect\Provider\Flag\Exception\UndefinedFlagException;
 use Alvtek\OpenIdConnect\Provider\Flag\Exception\DuplicateFlagTypeException;
+use Alvtek\OpenIdConnect\Provider\Flag\Exception\UndefinedFlagException;
 
-use Assert\Assert;
 
 class FlagCollection
 {
@@ -19,17 +20,16 @@ class FlagCollection
     /**
      * @param array $flags
      */
-    public function __construct($flags)
+    public function __construct(array $flags)
     {
-        Assert::that($flags)
-            ->isArray()
-            ->all()
-            ->isInstanceOf(Flag::class);
-        
         $this->position = 0;
         $this->flags = [];
         
         foreach ($flags as $flag) {
+            if (!$flag instanceof Flag) {
+                throw new InvalidArgumentException(sprintf("Argument must be an array of type %s", Flag::class));
+            }
+            
             if ($this->hasFlagType($flag->type())) {
                 throw new DuplicateFlagTypeException(sprintf("A flag of type "
                     . "'%s' already exists.", $flag->type()));
@@ -66,10 +66,8 @@ class FlagCollection
      * @param array $types
      * @return boolean
      */
-    public function hasFlagTypes($types)
+    public function hasFlagTypes(array $types)
     {
-        Assert::that($types)->isArray()->all()->string();
-
         foreach ($types as $type) {
             if (!$this->hasFlagType($type)) {
                 return false;
@@ -88,10 +86,8 @@ class FlagCollection
     }
 
     
-    public function getFlagByType($type)
+    public function getFlagByType(string $type)
     {
-        Assert::that($type)->notEmpty()->string();
-        
         foreach ($this->flags as $flag) {
             if ($flag->type() === $type) {
                 return $flag;

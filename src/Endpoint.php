@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect;
 
-use Alvtek\OpenIdConnect\Uri;
-
-use Assert\Assert;
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 
 /**
  * Description of Endpoint
@@ -22,11 +22,11 @@ class Endpoint
      * @param Uri $uri
      * @throws UnrecognisedEndpointException
      */
-    public function __construct($type, Uri $uri)
+    public function __construct(string $type, Uri $uri)
     {
-        Assert::that($type)
-            ->notEmpty()
-            ->string();
+        if (empty($type)) {
+            throw new InvalidArgumentException("type argument must be a non empty string");
+        }
 
         $this->type = $type;
         $this->uri = $uri;

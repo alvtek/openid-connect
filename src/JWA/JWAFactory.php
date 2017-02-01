@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect\JWA;
 
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\JWA\Exception\UnsupportedAlgorithmException;
-
-use Assert\Assert;
 
 abstract class JWAFactory
 {
@@ -31,10 +32,8 @@ abstract class JWAFactory
      * @param string $name
      * @return JWAInterface
      */
-    public static function createFromName($name)
+    public static function createFromName(string $name)
     {
-        Assert::that($name)->notEmpty()->string();
-        
         if (!in_array($name, static::$supportedAlgorithms)) {
             throw new UnsupportedAlgorithmException(sprintf("The algorithm "
                 . "'%s' is not supported by this library. If it is a valid "
@@ -49,7 +48,9 @@ abstract class JWAFactory
 
         $classname = __NAMESPACE__ . '\\' . str_replace(' ', '', strtoupper($name));
 
-        Assert::that($classname)->classExists();
+        if (!class_exists($classname)) {
+            throw new RuntimeException("Could not find JWA");
+        }
 
         return new $classname;
     }

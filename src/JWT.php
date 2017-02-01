@@ -1,15 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect;
 
 use Alvtek\OpenIdConnect\Claim\ClaimCollection;
-use Alvtek\OpenIdConnect\Provider;
-use Alvtek\OpenIdConnect\Uri;
-
 use Alvtek\OpenIdConnect\Claim\Exception\AmbiguousClaimException;
 use Alvtek\OpenIdConnect\JWS\Exception\UnexpectedPayloadException;
-
-use Assert\Assert;
 
 class JWT
 {
@@ -78,10 +75,8 @@ class JWT
      * @param integer $timestamp
      * @return boolean
      */
-    public function isExpiredAtTimestamp($timestamp)
+    public function isExpiredAtTimestamp(int $timestamp)
     {
-        Assert::that($timestamp)->integer();
-        
         if (!$this->claims->hasClaimType(self::EXPIRATION_TIME)) {
             return false;
         }

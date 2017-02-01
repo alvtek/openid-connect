@@ -1,8 +1,8 @@
 <?php
 
-namespace Alvtek\OpenIdConnect\Provider;
+declare(strict_types=1);
 
-use Assert\Assert;
+namespace Alvtek\OpenIdConnect\Provider;
 
 use JsonSerializable;
 
@@ -17,11 +17,8 @@ class Flag implements JsonSerializable
     /** @var boolean */
     private $value;
 
-    public function __construct($type, $value)
+    public function __construct(string $type, bool $value)
     {
-        Assert::that($type)->string();
-        Assert::that($value)->boolean();
-        
         $this->type = $type;
         $this->value = $value;
     }

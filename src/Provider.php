@@ -4,21 +4,14 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect;
 
-use Alvtek\OpenIdConnect\Uri;
-use Alvtek\OpenIdConnect\Uri\Query;
-
-use Alvtek\OpenIdConnect\Endpoint;
 use Alvtek\OpenIdConnect\Endpoint\EndpointCollection;
-
-use Alvtek\OpenIdConnect\Provider\Option;
-use Alvtek\OpenIdConnect\Provider\Option\OptionCollection;
-
+use Alvtek\OpenIdConnect\Provider\Exception\InvalidProviderException;
 use Alvtek\OpenIdConnect\Provider\Flag;
 use Alvtek\OpenIdConnect\Provider\Flag\FlagCollection;
+use Alvtek\OpenIdConnect\Provider\Option;
+use Alvtek\OpenIdConnect\Provider\Option\OptionCollection;
+use Alvtek\OpenIdConnect\Uri\Query;
 
-use Alvtek\OpenIdConnect\Provider\Exception\InvalidProviderException;
-
-use Assert\Assert;
 
 /**
  * This class contains the settings for an OpenId Provider.
@@ -210,10 +203,8 @@ class Provider
      * 
      * @return bool
      */
-    public function idTokenSigningAlgorithmSupported($algorithm)
+    public function idTokenSigningAlgorithmSupported(string $algorithm)
     {
-        Assert::that($algorithm)->notEmpty()->string();
-
         $key = self::ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED;
 
         return $this->options->get($key)->supports($algorithm);

@@ -2,13 +2,10 @@
 
 namespace Alvtek\OpenIdConnectTest;
 
-use Alvtek\OpenIdConnect\Claim\ClaimCollection;
 use Alvtek\OpenIdConnect\Claim;
-use Alvtek\OpenIdConnect\Provider;
-
+use Alvtek\OpenIdConnect\Claim\ClaimCollection;
 use Alvtek\OpenIdConnect\JWT;
-use Alvtek\OpenIdConnect\Uri;
-
+use Alvtek\OpenIdConnect\Provider;
 use PHPUnit\Framework\TestCase;
 
 class JWTTest extends TestCase

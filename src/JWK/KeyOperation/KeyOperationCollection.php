@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Alvtek\OpenIdConnect\JWK\KeyOperation;
 
-use Alvtek\OpenIdConnect\JWK\KeyOperation;
-
 use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
-
-use Assert\Assert;
-
+use Alvtek\OpenIdConnect\JWK\KeyOperation;
 use Countable;
 use JsonSerializable;
 
@@ -20,14 +16,13 @@ final class KeyOperationCollection implements Countable, JsonSerializable
     
     public function __construct(array $keyOperations)
     {
-        Assert::that($keyOperations)
-            ->isArray()
-            ->all()
-            ->isInstanceOf(KeyOperation::class);
-        
         $this->keyOperations = [];
         
         foreach ($keyOperations as $keyOperation) {
+            if (!$keyOperation instanceof KeyOperation) {
+                throw new InvalidArgumentException(sprintf("Argument must be an array of type %s", KeyOperation::class));
+            }
+            
             if (!$this->hasKeyOperation($keyOperation)) {
                 $this->keyOperations[] = $keyOperation;
             }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alvtek\OpenIdConnect;
 
 use Alvtek\OpenIdConnect\JWA\JWAFactory;
@@ -7,8 +9,6 @@ use Alvtek\OpenIdConnect\JWK\SigningInterface;
 use Alvtek\OpenIdConnect\JWK\VerificationInterface;
 use Alvtek\OpenIdConnect\JWS\Exception\InvalidJWSException;
 use Alvtek\OpenIdConnect\JWS\Header;
-use Assert\Assert;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * This class represents a generic Json Web Signature. 
@@ -45,7 +45,7 @@ class JWS
         $this->message = $message;
     }
     
-    public static function fromSerialised($string)
+    public static function fromSerialised(Base64UrlSafeInterface $base64, string $string)
     {
         $segments = explode('.', $string);
 
@@ -54,9 +54,9 @@ class JWS
                 . 'serialised Json Web Signature, found %d', count($segments)));
         }
         
-        $headerData = json_decode(Base64UrlSafe::decode($segments[0]), true);
-        $payload = Base64UrlSafe::decode($segments[1]);
-        $signature = Base64UrlSafe::decode($segments[2]);
+        $headerData = json_decode($base64->decode($segments[0]), true);
+        $payload = $base64->decode($segments[1]);
+        $signature = $base64->decode($segments[2]);
 
         $header = new Header($headerData);
         

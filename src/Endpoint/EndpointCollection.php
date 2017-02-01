@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace Alvtek\OpenIdConnect\Endpoint;
 
 use Alvtek\OpenIdConnect\Endpoint;
-
 use Alvtek\OpenIdConnect\Endpoint\Exception\UndefinedEndpointException;
+use Alvtek\OpenIdConnect\Exception\InvalidArgumentException;
 use Alvtek\OpenIdConnect\Provider\Exception\UnrecognisedEndpointException;
-
-use Assert\Assert;
-
 use Countable;
 use Iterator;
 
@@ -24,17 +21,16 @@ class EndpointCollection implements Countable, Iterator
     /**
      * @param array $endpoints
      */
-    public function __construct($endpoints)
+    public function __construct(array $endpoints)
     {
-        Assert::that($endpoints)
-            ->isArray()
-            ->all()
-            ->isInstanceOf(Endpoint::class);
-        
         $this->position = 0;
         $this->endpoints = [];
         
         foreach ($endpoints as $endpoint) {
+            if (!$endpoint instanceof Endpoint) {
+                throw new InvalidArgumentException(sprintf("Expecting an array of type %s", Endpoint::class));
+            }
+            
             if ($this->hasEndpoint($endpoint)) {
                 continue;
             }
@@ -70,11 +66,13 @@ class EndpointCollection implements Countable, Iterator
      * @param array $types
      * @return boolean
      */
-    public function hasEndpointTypes($types)
+    public function hasEndpointTypes(array $types)
     {
-        Assert::that($types)->isArray()->all()->string();
-
         foreach ($types as $type) {
+            if (!is_string($type)) {
+                throw new InvalidArgumentException("types argument must be an array of strings");
+            }
+            
             if (!$this->hasEndpointType($type)) {
                 return false;
             }

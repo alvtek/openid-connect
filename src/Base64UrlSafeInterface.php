@@ -7,6 +7,6 @@ namespace Alvtek\OpenIdConnect;
  */
 interface Base64UrlSafeInterface
 {
-    public static function encode(string $data) : string;
-    public static function decode(string $data) : string;
+    public function encode(string $data) : string;
+    public function decode(string $data) : string;
 }
